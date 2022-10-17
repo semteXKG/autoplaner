@@ -1,0 +1,43 @@
+
+#include <Arduino.h>
+#include <U8g2lib.h>
+#include <Encoder.h>
+
+U8G2_SH1106_128X64_NONAME_1_HW_I2C u8g2(U8G2_R0);
+Encoder enc(GPIO_NUM_32, GPIO_NUM_33);
+
+void printCenterText(char* text, int size) {
+    u8g2.drawHLine(0, 0, u8g2.getDisplayWidth());
+    u8g2.drawHLine(0, u8g2.getDisplayHeight()-1 , u8g2.getDisplayWidth());
+    u8g2_uint_t width = u8g2.getUTF8Width(text);
+
+    u8g2.drawStr(
+      u8g2.getDisplayWidth() / 2 - width / 2, 
+      u8g2.getDisplayHeight() / 2 + size / 2, 
+      text);
+}
+
+long oldPosition  = -999;
+
+void setup(void)
+{
+  
+  Serial.begin(9600);
+  u8g2.begin();  
+  u8g2.setFont(u8g2_font_inb24_mr);
+}
+
+void loop(void)
+{
+  u8g2.firstPage();
+  do {
+    printCenterText("08.32", 24);
+  } while ( u8g2.nextPage() );
+
+  long newPosition = enc.read();
+  if (newPosition != oldPosition) {
+    oldPosition = newPosition;
+  }
+  delay(1000);
+}
+
