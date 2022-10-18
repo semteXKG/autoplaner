@@ -32,7 +32,7 @@ void Display::printCenterText(char* text, int size) {
       text);
 }
 
-void Display::updateText() {
+void Display::updatePositionReadings() {
 	u8g2->firstPage();
 	do {
 		char output[20];	
@@ -49,6 +49,21 @@ void Display::updateText() {
 	} while ( u8g2->nextPage() );
 }
 
-void Display::tick() {
+void Display::updateCalibrationText() {
+	printCenterText("Calibration needed", 16);
+}
 
+void Display::tick() {
+	if (this->sharedData->shouldUpdateDisplay()) {
+		switch(this->sharedData->getState()) {
+			case SharedData::MachineState::CALIBRATION_NEEDED: 
+				updateCalibrationText();
+				break;
+			case SharedData::MachineState::IDLE:
+				updatePositionReadings();
+				break;
+			default:
+			break;
+		}
+	}
 }

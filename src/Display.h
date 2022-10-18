@@ -7,7 +7,8 @@ class Display {
 private:
     U8G2_SH1106_128X64_NONAME_1_HW_I2C* u8g2;
     SharedData* sharedData;
-    void updateText();
+    void updatePositionReadings();
+    void updateCalibrationText();
     void printCenterText(char* text, int size = 24);
 public:
     Display(SharedData* sharedData);

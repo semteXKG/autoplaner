@@ -29,3 +29,23 @@ double SharedData::getCurrentPosition() {
 void SharedData::setCurrentPosition(double currentPosition) {
     this->currentPosition = currentPosition;
 }
+
+void SharedData::scheduleDisplayUpdate() {
+    this->nextDisplayUpdate = millis() + DISPLAY_UPDATE_DELAY;
+}
+
+bool SharedData::shouldUpdateDisplay() {
+    if (millis() > this->nextDisplayUpdate) {
+        this->nextDisplayUpdate = -1;
+        return true;
+    }
+    return false;
+}
+
+SharedData::MachineState SharedData::getState() {
+    return this->state;
+}
+
+void SharedData::switchState(SharedData::MachineState state) {
+    this->state = state;
+}

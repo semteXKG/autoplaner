@@ -17,10 +17,16 @@ class InputManager {
     private:
         RotaryEncoder* encoder;
         SharedData* sharedData;
+        gpio_num_t speedButtonPin, enterButtonPin;
         double increment;
         int prevEncPosition;
+        bool speedButtonPressed, enterButtonPressed;
+        void handleSpeedButton();
+        void handleSpeedButtonPressed();
+        void handleSpeedButtonDepressed();
+        void handleEnterButton();
     public:
-        InputManager(int pin1, int pin2);
+        InputManager(int pin1, int pin2, gpio_num_t speedButtonPin, gpio_num_t enterButtonPin);
         ~InputManager();
         void tick();
 };
