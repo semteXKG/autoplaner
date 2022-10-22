@@ -1,6 +1,7 @@
 #ifndef shareddata_h
 #define shareddata_h
-#include <InputManager.h>
+
+#include <Constants.h>
 
 static const int DISPLAY_UPDATE_DELAY = 50;
 
@@ -10,17 +11,10 @@ class SharedData {
         double currentPosition;
         long nextDisplayUpdate = -1;
     public:
-        enum MachineState {
-            CALIBRATION_NEEDED, 
-            CALIBRATING,
-            IDLE,
-            MOVING,
-            BOTTOM_OUT,
-        };
         SharedData();
         ~SharedData();
         MachineState state;
-        bool enterButtonPressed;
+        bool enterButtonPressed, speedButtonPressed, bottomOutPressed;
         void setTargetPosition(double targetPosition);
         double getTargetPosition();
         void setCurrentPosition(double currentPosition);

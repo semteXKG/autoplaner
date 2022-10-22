@@ -56,10 +56,10 @@ void Display::updateCalibrationText() {
 void Display::tick() {
 	if (this->sharedData->shouldUpdateDisplay()) {
 		switch(this->sharedData->getState()) {
-			case SharedData::MachineState::CALIBRATION_NEEDED: 
+			case MachineState::CALIBRATION_NEEDED: 
 				updateCalibrationText();
 				break;
-			case SharedData::MachineState::IDLE:
+			case MachineState::IDLE:
 				updatePositionReadings();
 				break;
 			default:

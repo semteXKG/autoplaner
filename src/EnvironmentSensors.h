@@ -7,33 +7,11 @@
 class EnvironmentSensors {
 private:
     SharedData* sharedData;
-    gpio_num_t bottomOutSensorPin;
 public:
-    EnvironmentSensors(SharedData* sharedData, gpio_num_t bottomOutSensorPin);
+    EnvironmentSensors(SharedData* sharedData);
     ~EnvironmentSensors();
     void tick();
     void handleBottomOutSensor();
 };
-
-EnvironmentSensors::EnvironmentSensors(SharedData* sharedData, gpio_num_t bottomOutSensorPin) {
-    this->bottomOutSensorPin = bottomOutSensorPin;
-    pinMode(bottomOutSensorPin, PULLDOWN);
-}
-
-EnvironmentSensors::~EnvironmentSensors() {
-}
-
-void EnvironmentSensors::handleBottomOutSensor() {
-    int val = digitalRead(this->bottomOutSensorPin);
-    if (val == 0) {
-        sharedData->switchState(SharedData::MachineState::BOTTOM_OUT);
-    }
-}
-
-void EnvironmentSensors::tick() {
-    handleBottomOutSensor();
-}
-
-
 
 #endif

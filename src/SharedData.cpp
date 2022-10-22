@@ -1,4 +1,5 @@
 #include <SharedData.h>
+#include <Arduino.h>
 
 SharedData::SharedData() {
     this->currentPosition = MIN_POSITION;
@@ -42,10 +43,10 @@ bool SharedData::shouldUpdateDisplay() {
     return false;
 }
 
-SharedData::MachineState SharedData::getState() {
+MachineState SharedData::getState() {
     return this->state;
 }
 
-void SharedData::switchState(SharedData::MachineState state) {
+void SharedData::switchState(MachineState state) {
     this->state = state;
 }
