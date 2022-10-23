@@ -10,6 +10,8 @@ class TargetSelector {
         RotaryEncoder* encoder;
         SharedData* sharedData;
         int prevEncPosition;
+        void handleEncoder();
+        void handleInputSelectionButton();
     public:
         TargetSelector(int pin1, int pin2, SharedData* sharedData);
         ~TargetSelector();

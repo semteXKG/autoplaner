@@ -37,7 +37,8 @@ void Display::updatePositionReadings() {
 	do {
 		char output[20];	
 		int size;
-		if(sharedData->getCurrentPosition() == sharedData->getTargetPosition()) {
+		if((sharedData->getCurrentPosition() == sharedData->getTargetPosition())
+			|| (sharedData->getState() == MachineState::MOVING)) {
 			sprintf(&output[0], "%03.1f", sharedData->getCurrentPosition());
 			size = 24;
 		} else {
@@ -75,6 +76,7 @@ void Display::tick() {
 				updateCalibratingText();
 				break;
 			case MachineState::IDLE:
+			case MachineState::MOVING: 
 				updatePositionReadings();
 				break;
 			default:
