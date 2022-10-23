@@ -2,9 +2,9 @@
 #include <SharedData.h>
 
 Display::Display(SharedData* sharedData) {
-    this->u8g2 = new U8G2_SH1106_128X64_NONAME_1_HW_I2C(U8G2_R0);
     this->sharedData = sharedData;
-    u8g2->begin();
+    this->u8g2 = new U8G2_SH1106_128X64_NONAME_1_HW_I2C(U8G2_R0);
+	u8g2->begin();
 }
 
 Display::~Display() {
@@ -50,14 +50,29 @@ void Display::updatePositionReadings() {
 }
 
 void Display::updateCalibrationText() {
-	printCenterText("Calibration needed", 16);
+	u8g2->firstPage();
+	do {
+		printCenterText("Cal needed", 10);
+	} while (u8g2->nextPage());
+}
+
+
+void Display::updateCalibratingText() {
+	u8g2->firstPage();
+	do {
+		printCenterText("Cal running...", 10);
+	} while (u8g2->nextPage());
 }
 
 void Display::tick() {
 	if (this->sharedData->shouldUpdateDisplay()) {
+		Serial.println("updating display");
 		switch(this->sharedData->getState()) {
 			case MachineState::CALIBRATION_NEEDED: 
 				updateCalibrationText();
+				break;
+			case MachineState::CALIBRATING: 
+				updateCalibratingText();
 				break;
 			case MachineState::IDLE:
 				updatePositionReadings();

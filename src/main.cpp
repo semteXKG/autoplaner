@@ -23,10 +23,6 @@ EnvironmentSensors* environmentSensors;
 HardwareButtonManager* buttonManager;
 Calibrator* calibrator;
 
-void handleBottomOutButton() {
-	int read = digitalRead(BOTTOM_OUT_BUTTON);
-}
-
 void setup() {
 	Serial.begin(115200);
 	sharedData = new SharedData();
@@ -34,6 +30,9 @@ void setup() {
 	buttonManager = new HardwareButtonManager(GO_BUTTON, BOTTOM_OUT_BUTTON, SPEED_BUTTON, sharedData);
 	environmentSensors = new EnvironmentSensors(sharedData);
 	calibrator = new Calibrator(sharedData);
+	display = new Display(sharedData);
+	sharedData->scheduleDisplayUpdate();
+	sharedData->switchState(MachineState::CALIBRATION_NEEDED);
 }
 
 void loop() {
@@ -42,5 +41,5 @@ void loop() {
 	inputManager->tick();
 	environmentSensors->tick();
 	calibrator->tick();
-
+	display->tick();
 }

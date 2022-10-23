@@ -15,9 +15,14 @@ void TargetSelector::tick() {
 	if(encoder->getPosition() != prevEncPosition) {
 		double increment = sharedData->speedButtonPressed ? INCREMENT_FAST_IN_MM : INCREMENT_NORMAL_IN_MM;
 		int32_t delta = encoder->getPosition() - prevEncPosition;
-		
-		sharedData->setTargetPosition(sharedData->getTargetPosition() + delta * increment);
-		
+		double newPos = sharedData->getTargetPosition() + (delta * increment); 
+		Serial.print("new pos ");
+		Serial.println(newPos);
+		Serial.print("delta" );
+		Serial.println(delta);
+
+		sharedData->setTargetPosition(newPos);
+		sharedData->scheduleDisplayUpdate();
 		prevEncPosition = encoder->getPosition();
 
         Serial.println("Encoder count = " + String((int32_t)encoder->getPosition()));	

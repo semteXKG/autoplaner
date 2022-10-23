@@ -8,9 +8,7 @@ EnvironmentSensors::~EnvironmentSensors() {
 }
 
 void EnvironmentSensors::handleBottomOutSensor() {
-    if (sharedData->bottomOutPressed) {
-        sharedData->switchState(MachineState::BOTTOM_OUT);
-    }
+    
 }
 
 void EnvironmentSensors::tick() {

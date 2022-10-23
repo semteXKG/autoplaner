@@ -10,10 +10,10 @@ class SharedData {
         double targetPosition;
         double currentPosition;
         long nextDisplayUpdate = -1;
+        MachineState state;
     public:
         SharedData();
         ~SharedData();
-        MachineState state;
         bool enterButtonPressed, speedButtonPressed, bottomOutPressed;
         void setTargetPosition(double targetPosition);
         double getTargetPosition();

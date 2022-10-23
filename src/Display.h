@@ -9,6 +9,7 @@ private:
     SharedData* sharedData;
     void updatePositionReadings();
     void updateCalibrationText();
+    void updateCalibratingText();
     void printCenterText(char* text, int size = 24);
 public:
     Display(SharedData* sharedData);

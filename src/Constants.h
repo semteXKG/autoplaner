@@ -8,6 +8,5 @@ enum MachineState {
     CALIBRATION_NEEDED, 
     CALIBRATING,
     IDLE,
-    MOVING,
-    BOTTOM_OUT,
+    MOVING  
 };

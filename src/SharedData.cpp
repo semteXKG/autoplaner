@@ -16,6 +16,7 @@ double SharedData::getTargetPosition() {
 }
 
 void SharedData::setTargetPosition(double targetPosition) {
+    this->targetPosition = targetPosition;
     if(this->targetPosition < MIN_POSITION) {
 		this->targetPosition = MIN_POSITION;
 	} else if (this->targetPosition > MAX_POSITION) {
@@ -48,5 +49,8 @@ MachineState SharedData::getState() {
 }
 
 void SharedData::switchState(MachineState state) {
+    Serial.print("Switching state to ");
+    Serial.println(state);
     this->state = state;
+    scheduleDisplayUpdate();
 }
