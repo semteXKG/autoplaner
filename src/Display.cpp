@@ -37,8 +37,7 @@ void Display::updatePositionReadings() {
 	do {
 		char output[20];	
 		int size;
-		if((sharedData->getCurrentPosition() == sharedData->getTargetPosition())
-			|| (sharedData->getState() == MachineState::MOVING)) {
+		if((sharedData->getCurrentPosition() == sharedData->getTargetPosition())) {
 			sprintf(&output[0], "%03.1f", sharedData->getCurrentPosition());
 			size = 24;
 		} else {
@@ -65,9 +64,15 @@ void Display::updateCalibratingText() {
 	} while (u8g2->nextPage());
 }
 
+void Display::updateMovingText() {
+	u8g2->firstPage();
+	do {
+		printCenterText("moving...", 10);
+	} while (u8g2->nextPage());
+}
+
 void Display::tick() {
 	if (this->sharedData->shouldUpdateDisplay()) {
-		Serial.println("updating display");
 		switch(this->sharedData->getState()) {
 			case MachineState::CALIBRATION_NEEDED: 
 				updateCalibrationText();
@@ -76,8 +81,10 @@ void Display::tick() {
 				updateCalibratingText();
 				break;
 			case MachineState::IDLE:
-			case MachineState::MOVING: 
 				updatePositionReadings();
+				break;
+			case MachineState::MOVING:
+				updateMovingText();
 				break;
 			default:
 			break;

@@ -23,26 +23,14 @@ void HardwareButtonManager::tick() {
 void HardwareButtonManager::handleSpeedButton() {
 	int read = digitalRead(this->speedButtonPin);
     this->sharedData->speedButtonPressed = read == 0;
-    /*
-    Serial.print("speed: ");
-    Serial.println(this->sharedData->speedButtonPressed);
-    */
 }
 
 void HardwareButtonManager::handleEnterButton() {
 	int read = digitalRead(this->enterButtonPin);
 	this->sharedData->enterButtonPressed = read == 0;
-    /*
-    Serial.print("enter: ");
-    Serial.println(this->sharedData->enterButtonPressed);
-    */
 }
 
 void HardwareButtonManager::handleBottomOutButton() {
     int read = digitalRead(this->bottomOutButtonPin) ;
     this->sharedData->bottomOutPressed = read;
-    /*
-    Serial.print("bottomOut: ");
-    Serial.println(this->sharedData->bottomOutPressed);
-    */
 }

@@ -3,8 +3,6 @@
 
 #include <Constants.h>
 
-static const int DISPLAY_UPDATE_DELAY = 50;
-
 class SharedData {
     private:
         double targetPosition;
@@ -19,6 +17,7 @@ class SharedData {
         double getTargetPosition();
         void setCurrentPosition(double currentPosition);
         double getCurrentPosition();
+        void setPosition(double position);
         void scheduleDisplayUpdate();
         bool shouldUpdateDisplay();
         void switchState(MachineState state);

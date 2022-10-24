@@ -14,7 +14,7 @@ void Calibrator::tick() {
         this->sharedData->switchState(CALIBRATING);
     }
 
-    if(this->sharedData->getState() == CALIBRATING) {
+/*    if(this->sharedData->getState() == CALIBRATING) {
         if(this->sharedData->bottomOutPressed) {
             Serial.println("Calibration done");
             this->sharedData->setCurrentPosition(210.0);
@@ -22,7 +22,7 @@ void Calibrator::tick() {
             this->sharedData->switchState(MachineState::IDLE);
             this->calibrationRunning = false;
         }
-    }
+    }*/
 }
 
 void Calibrator::startCalibration() {

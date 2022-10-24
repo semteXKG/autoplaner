@@ -28,10 +28,6 @@ void TargetSelector::handleEncoder() {
 	sharedData->setTargetPosition(sharedData->getTargetPosition() + (delta * increment));
 	sharedData->scheduleDisplayUpdate();
 	prevEncPosition = encoder->getPosition();
-
-    Serial.println("Encoder count = " + String((int32_t)encoder->getPosition()));	
-	Serial.println("Current Pos = " + String(sharedData->getCurrentPosition()));
-	Serial.println("Target Position = " + String(sharedData->getTargetPosition()));	
 }
 
 

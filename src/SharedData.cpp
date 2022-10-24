@@ -32,12 +32,19 @@ void SharedData::setCurrentPosition(double currentPosition) {
     this->currentPosition = currentPosition;
 }
 
+void SharedData::setPosition(double position) {
+    setCurrentPosition(position);
+    setTargetPosition(position);
+}
+
 void SharedData::scheduleDisplayUpdate() {
-    this->nextDisplayUpdate = millis() + DISPLAY_UPDATE_DELAY;
+    if(this->nextDisplayUpdate == -1) {
+        this->nextDisplayUpdate = millis() + DISPLAY_UPDATE_DELAY;
+    }
 }
 
 bool SharedData::shouldUpdateDisplay() {
-    if (millis() > this->nextDisplayUpdate) {
+    if (this->nextDisplayUpdate != -1 && millis() > this->nextDisplayUpdate) {
         this->nextDisplayUpdate = -1;
         return true;
     }

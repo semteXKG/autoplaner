@@ -10,6 +10,7 @@ private:
     void updatePositionReadings();
     void updateCalibrationText();
     void updateCalibratingText();
+    void updateMovingText();
     void printCenterText(char* text, int size = 24);
 public:
     Display(SharedData* sharedData);

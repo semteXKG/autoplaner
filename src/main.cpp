@@ -8,6 +8,7 @@
 #include <EnvironmentSensors.h>
 #include <HardwareButtonManager.h>
 #include <Calibrator.h>
+#include <StepperController.h>
 
 
 #define DEBUG ""
@@ -15,6 +16,8 @@
 static const gpio_num_t SPEED_BUTTON = GPIO_NUM_12;
 static const gpio_num_t GO_BUTTON = GPIO_NUM_14;
 static const gpio_num_t BOTTOM_OUT_BUTTON = GPIO_NUM_27;
+static const gpio_num_t STEPPER_PULSE = GPIO_NUM_33;
+static const gpio_num_t STEPPER_DIR = GPIO_NUM_32;
 
 Display* display;
 TargetSelector* inputManager;
@@ -22,6 +25,7 @@ SharedData* sharedData;
 EnvironmentSensors* environmentSensors;
 HardwareButtonManager* buttonManager;
 Calibrator* calibrator;
+StepperController* stepperController;
 
 void setup() {
 	Serial.begin(115200);
@@ -31,6 +35,7 @@ void setup() {
 	environmentSensors = new EnvironmentSensors(sharedData);
 	calibrator = new Calibrator(sharedData);
 	display = new Display(sharedData);
+	stepperController = new StepperController(sharedData, STEPPER_PULSE, STEPPER_DIR);
 	sharedData->scheduleDisplayUpdate();
 	sharedData->switchState(MachineState::CALIBRATION_NEEDED);
 }
@@ -42,4 +47,5 @@ void loop() {
 	environmentSensors->tick();
 	calibrator->tick();
 	display->tick();
+	stepperController->tick();
 }
