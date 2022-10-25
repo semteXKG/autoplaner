@@ -10,6 +10,7 @@ class TargetSelector {
         RotaryEncoder* encoder;
         SharedData* sharedData;
         int prevEncPosition;
+        double lastDistance = 0;
         void handleEncoder();
         void handleInputSelectionButton();
     public:

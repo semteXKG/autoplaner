@@ -2,15 +2,15 @@
 
 static const int RPS = 400;
 
-static const int OP_SPEED = 4 * RPS;
+static const int OP_SPEED = 8 * RPS;
 static const int CAL_SPEED = 0.2 * RPS;
 
 StepperController::StepperController(SharedData* sharedData, gpio_num_t pulsePin, gpio_num_t directionPin) {
     stepper = new AccelStepper(AccelStepper::DRIVER, pulsePin, directionPin);
     this->sharedData = sharedData;
-    stepper->setMaxSpeed(4*RPS);
+    stepper->setMaxSpeed(OP_SPEED);
     stepper->setAcceleration(10 * RPS);
-    stepper->setMinPulseWidth(500);
+    stepper->setMinPulseWidth(50);
     stepper->setCurrentPosition(0);  
 }
 

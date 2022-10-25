@@ -4,7 +4,7 @@ static const double INCREMENT_FAST_IN_MM = 5;
 static const double MAX_POSITION = 220;
 static const double MIN_POSITION = 8;
 
-static const long PULSE_PER_MM = 200;
+static const long PULSE_PER_MM = 400;
 
 static const int DISPLAY_UPDATE_DELAY = 50;
 

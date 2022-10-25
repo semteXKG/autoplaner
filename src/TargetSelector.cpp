@@ -32,8 +32,14 @@ void TargetSelector::handleEncoder() {
 
 
 void TargetSelector::handleInputSelectionButton() {
-	if(sharedData->getState() == IDLE && sharedData->enterButtonPressed) {
-		sharedData->switchState(MachineState::MOVING);
+	if(sharedData->getState() == IDLE && sharedData->enterButtonTriggered) { 
+		if(sharedData->getTargetPosition() != sharedData->getCurrentPosition()) {
+			lastDistance = sharedData->getTargetPosition() - sharedData->getCurrentPosition();
+			sharedData->switchState(MachineState::MOVING);
+		} else {
+			sharedData->setTargetPosition(sharedData->getCurrentPosition() + lastDistance);
+		}
+		sharedData->scheduleDisplayUpdate();
 	}
 }
 

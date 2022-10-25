@@ -13,6 +13,7 @@ class SharedData {
         SharedData();
         ~SharedData();
         bool enterButtonPressed, speedButtonPressed, bottomOutPressed;
+        bool enterButtonTriggered, speedButtonTriggered;
         void setTargetPosition(double targetPosition);
         double getTargetPosition();
         void setCurrentPosition(double currentPosition);
