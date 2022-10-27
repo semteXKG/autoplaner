@@ -9,7 +9,7 @@ class StepperController {
 private:
     AccelStepper* stepper;
     SharedData* sharedData;
-    bool phase1 = false, phase2 = false;
+    bool calibPhase1 = false, calibPhase2 = false;
     bool positionMoving;
     long totalDistanceInPulses;
     void handleBottomOut();

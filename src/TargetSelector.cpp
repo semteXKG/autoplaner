@@ -13,6 +13,7 @@ TargetSelector::~TargetSelector() {
 void TargetSelector::handleEncoder() {
     encoder->tick();
 	// Loop and read the count
+	
 	if(this->sharedData->getState() != MachineState::IDLE) {
 		this->prevEncPosition = encoder->getPosition();
 		return;
@@ -23,7 +24,22 @@ void TargetSelector::handleEncoder() {
 		return;
 	}
 
-	double increment = sharedData->speedButtonPressed ? INCREMENT_FAST_IN_MM : INCREMENT_NORMAL_IN_MM;
+	if(encoder->getRPM() > 100) {
+		Serial.println("Frot unlocked with ");
+		Serial.println(encoder->getRPM());
+		fastRotationTill = millis() + ROTATION_ACCELERATION_TIMEOUT;
+	}
+
+	double increment;
+	if (sharedData->speedButton->isPressed()) {
+		increment =  INCREMENT_FAST_IN_MM;
+	} else {
+		if(fastRotationTill > millis()) {
+			increment = INCREMENT_FROT_IN_MM;
+		} else {
+			increment = INCREMENT_NORMAL_IN_MM;
+		}
+	}
 
 	sharedData->setTargetPosition(sharedData->getTargetPosition() + (delta * increment));
 	sharedData->scheduleDisplayUpdate();
@@ -32,10 +48,10 @@ void TargetSelector::handleEncoder() {
 
 
 void TargetSelector::handleInputSelectionButton() {
-	if(sharedData->getState() == IDLE && sharedData->enterButtonTriggered) { 
+	if(sharedData->getState() == IDLE && sharedData->enterButton->fell()) { 
 		if(sharedData->getTargetPosition() != sharedData->getCurrentPosition()) {
 			lastDistance = sharedData->getTargetPosition() - sharedData->getCurrentPosition();
-			sharedData->switchState(MachineState::MOVING);
+			sharedData->switchState(MachineState::PREP_MOVING);
 		} else {
 			sharedData->setTargetPosition(sharedData->getCurrentPosition() + lastDistance);
 		}

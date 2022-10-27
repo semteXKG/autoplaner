@@ -8,7 +8,7 @@ Calibrator::~Calibrator() {
 }
 
 void Calibrator::tick() {
-    if(this->sharedData->getState() == MachineState::CALIBRATION_NEEDED && this->sharedData->enterButtonPressed) {
+    if(this->sharedData->getState() == MachineState::CALIBRATION_NEEDED && this->sharedData->enterButton->rose()) {
         Serial.println("Starting Calibration");
         this->calibrationRunning = true;
         this->sharedData->switchState(CALIBRATING);
@@ -26,7 +26,7 @@ void Calibrator::tick() {
 }
 
 void Calibrator::startCalibration() {
-    if (this->sharedData->bottomOutPressed) {
+    if (this->sharedData->bottomOut->isPressed()) {
         Serial.println("ERROR; BOTTOM OUT!");
     } else {
         this->calibrationRunning = true;

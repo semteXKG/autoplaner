@@ -83,7 +83,10 @@ void Display::tick() {
 			case MachineState::IDLE:
 				updatePositionReadings();
 				break;
-			case MachineState::MOVING:
+			case MachineState::PREP_MOVING:
+			case MachineState::MOVING_DOWN_OVERSHOOT:
+			case MachineState::MOVING_DOWN_CORRECTION:
+			case MachineState::MOVING_UP:
 				updateMovingText();
 				break;
 			default:

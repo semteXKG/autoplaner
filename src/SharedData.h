@@ -2,6 +2,7 @@
 #define shareddata_h
 
 #include <Constants.h>
+#include <Bounce2.h>
 
 class SharedData {
     private:
@@ -12,8 +13,9 @@ class SharedData {
     public:
         SharedData();
         ~SharedData();
-        bool enterButtonPressed, speedButtonPressed, bottomOutPressed;
-        bool enterButtonTriggered, speedButtonTriggered;
+        Bounce2::Button* enterButton;
+        Bounce2::Button* speedButton;
+        Bounce2::Button* bottomOut;
         void setTargetPosition(double targetPosition);
         double getTargetPosition();
         void setCurrentPosition(double currentPosition);
