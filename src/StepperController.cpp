@@ -1,18 +1,10 @@
 #include <StepperController.h>
 
-static const int RPS = 400;
-
-static const int OP_SPEED = 8 * RPS;
-static const int CAL_SPEED = 0.2 * RPS;
-
-static const int DEAD_ZONE = RPS * 0.05;
-static const int OVERSHOOT = RPS * 2;
-
 StepperController::StepperController(SharedData* sharedData, gpio_num_t pulsePin, gpio_num_t directionPin) {
     stepper = new AccelStepper(AccelStepper::DRIVER, pulsePin, directionPin);
     this->sharedData = sharedData;
     stepper->setMaxSpeed(OP_SPEED);
-    stepper->setAcceleration(10 * RPS);
+    stepper->setAcceleration(10 * PULSE_PER_MM);
     stepper->setMinPulseWidth(50);
     stepper->setCurrentPosition(0);  
 }
@@ -28,14 +20,14 @@ void StepperController::handleCalibration() {
         if (!calibPhase1 && !calibPhase2) {
             Serial.println("ph1");
             calibPhase1 = true;
-            stepper->move(5000000);
+            stepper->move(-5000000);
         }
 
         if (calibPhase1 && sharedData->bottomOut->isPressed() && !this->stepper->isRunning()) {
             Serial.println("ph2");
             calibPhase2 = true;
             stepper->setMaxSpeed(CAL_SPEED);
-            stepper->move(-5000000);
+            stepper->move(5000000);
         }
 
         if(calibPhase2 && !sharedData->bottomOut->isPressed()) {
