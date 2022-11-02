@@ -44,8 +44,8 @@ void StepperController::calibrationDone() {
     calibPhase1 = false;
     calibPhase2 = false;
     sharedData->switchState(MachineState::IDLE);
-    sharedData->setCurrentPosition(210.0);
-    sharedData->setPosition(210.0);
+    sharedData->setCurrentPosition(CAL_POSITION_MM);
+    sharedData->setPosition(CAL_POSITION_MM);
     sharedData->scheduleDisplayUpdate();
 }
 
