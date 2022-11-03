@@ -27,13 +27,13 @@ void StepperController::handleCalibration() {
             Serial.println("ph2");
             calibPhase2 = true;
             stepper->setMaxSpeed(CAL_SPEED);
+            stepper->setSpeed(CAL_SPEED);
             stepper->move(5000000);
         }
 
         if(calibPhase2 && !sharedData->bottomOut->isPressed()) {
             Serial.println("end");
             stepper->stop();
-            stepper->setMaxSpeed(OP_SPEED);
             calibrationDone();
         }
     }
@@ -41,6 +41,7 @@ void StepperController::handleCalibration() {
 
 void StepperController::calibrationDone() {
     stepper->setMaxSpeed(OP_SPEED);
+    stepper->setSpeed(OP_SPEED);
     calibPhase1 = false;
     calibPhase2 = false;
     sharedData->switchState(MachineState::IDLE);
