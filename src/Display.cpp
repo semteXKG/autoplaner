@@ -10,7 +10,7 @@ Display::Display(SharedData* sharedData) {
 Display::~Display() {
 }
 
-void Display::printCenterText(char* text, int size) {
+void Display::printCenterText(const char* text, int size) {
 	switch (size) {
 	case 10:
 		u8g2->setFont(u8g2_font_profont17_mf);
@@ -32,7 +32,12 @@ void Display::printCenterText(char* text, int size) {
       text);
 }
 
-void Display::updatePositionReadings() {
+void Display::updatePositionReadings(bool blink) {
+	if(blink && (millis() / 1000) % 2 == 0) {
+		u8g2->clearDisplay();
+		return;
+	}
+
 	u8g2->firstPage();
 	do {
 		char output[20];	
@@ -50,9 +55,10 @@ void Display::updatePositionReadings() {
 }
 
 void Display::updateCalibrationText() {
+	
 	u8g2->firstPage();
 	do {
-		printCenterText("Cal needed", 10);
+		printCenterText(CAL_NEEDED_TEXT, 10);
 	} while (u8g2->nextPage());
 }
 
@@ -60,14 +66,14 @@ void Display::updateCalibrationText() {
 void Display::updateCalibratingText() {
 	u8g2->firstPage();
 	do {
-		printCenterText("Cal running...", 10);
+		printCenterText(CAL_RUNNING_TEXT, 10);
 	} while (u8g2->nextPage());
 }
 
 void Display::updateMovingText() {
 	u8g2->firstPage();
 	do {
-		printCenterText("moving...", 10);
+		printCenterText(MOVING_TEXT, 10);
 	} while (u8g2->nextPage());
 }
 
@@ -81,7 +87,10 @@ void Display::tick() {
 				updateCalibratingText();
 				break;
 			case MachineState::IDLE:
-				updatePositionReadings();
+				updatePositionReadings(false);
+				break;
+			case MachineState::OFFSET_ADJUSTING:
+				updatePositionReadings(true);
 				break;
 			case MachineState::PREP_MOVING:
 			case MachineState::MOVING_DOWN_OVERSHOOT:

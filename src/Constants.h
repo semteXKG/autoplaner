@@ -16,13 +16,22 @@ static const int DEAD_ZONE = PULSE_PER_MM * 0.05;
 static const int OVERSHOOT = PULSE_PER_MM;
 
 static const int ROTATION_ACCELERATION_TIMEOUT = 500;
+static const int LONG_PRESS_TIMEOUT_IN_MILLISECONDS = 1000;
 
 static const int DISPLAY_UPDATE_DELAY = 50;
+
+static const int MAX_INPUTS = 5;
+static const int IGNORE_ACCIDENTAL_INPUT_DELAY_MS = 50;
+
+static const char* CAL_NEEDED_TEXT = "Cal needed";
+static const char* CAL_RUNNING_TEXT = "Cal running...";
+static const char* MOVING_TEXT = "moving...";
 
 enum MachineState {
     CALIBRATION_NEEDED, 
     CALIBRATING,
     IDLE,
+    OFFSET_ADJUSTING,
     PREP_MOVING,
     MOVING_UP,
     MOVING_DOWN_OVERSHOOT,
