@@ -25,9 +25,17 @@ void TargetSelector::handleEncoder() {
 	}
 
 	if(encoder->getRPM() > 100) {
-		Serial.println("Frot unlocked with ");
+		Serial.println("fast rotations rpm reached");
 		Serial.println(encoder->getRPM());
-		fastRotationTill = millis() + ROTATION_ACCELERATION_TIMEOUT;
+		if(fastRotationSince == 0) {
+			fastRotationSince = millis();
+		} 
+		if(fastRotationSince < millis() - ROTATION_ACCELERATION_ENGAGE_DELAY) {
+			Serial.println("fast rotation enabled ");
+			fastRotationTill = millis() + ROTATION_ACCELERATION_TIMEOUT;
+		}	
+	} else {
+		fastRotationSince = 0;
 	}
 
 	double increment;
@@ -52,8 +60,10 @@ void TargetSelector::handleEncoder() {
 
 
 void TargetSelector::handleInputSelectionButton() {
-	if (sharedData->enterButton->fell()) {
+	if (sharedData->enterButton->rose()) {
 		if (sharedData->getState() == IDLE) {
+			Serial.print("PrevDur: ");
+			Serial.println(sharedData->enterButton->previousDuration());
 			if (sharedData->enterButton->previousDuration() > LONG_PRESS_TIMEOUT_IN_MILLISECONDS) {
 				sharedData->switchState(MachineState::OFFSET_ADJUSTING);
 			} else {
@@ -68,6 +78,7 @@ void TargetSelector::handleInputSelectionButton() {
 			sharedData->scheduleDisplayUpdate();	
 		} else if (sharedData->getState() == MachineState::OFFSET_ADJUSTING) {
 			sharedData->setCurrentPosition(sharedData->getTargetPosition());
+			sharedData->switchState(MachineState::IDLE);
 		}
 	}
 }
@@ -76,8 +87,12 @@ void TargetSelector::correctAccidentalInputs() {
 	double correction = 0;
 	long currentTimestamp = millis();
 	for (int i = currentInputPosition - 1; i >= currentInputPosition - MAX_INPUTS; i--) {
+		Serial.print("CHecking index: ");
+		Serial.println(i);
 		if (currentTimestamp - IGNORE_ACCIDENTAL_INPUT_DELAY_MS < lastTimestamps[i % MAX_INPUTS]) {
-			correction += lastValues[i % MAX_INPUTS];
+			Serial.print("removed accidental input " );
+			Serial.println(lastValues[i % MAX_INPUTS]);
+			correction += lastValues[i % MAX_INPUTS] * -1;
 		} else {
 			break;
 		}
@@ -85,7 +100,15 @@ void TargetSelector::correctAccidentalInputs() {
 	sharedData->setTargetPosition(sharedData->getTargetPosition() + correction);
 }
 
+void TargetSelector::handleMoveToConversionButton() {
+	if (sharedData->getState() == IDLE && sharedData->moveToConversion->isPressed() && sharedData->moveToConversion->currentDuration() > TIMEOUT_MOVE_TO_CONVERSION) {
+		sharedData->setTargetPosition(170.0);
+		sharedData->switchState(PREP_MOVING);
+	}
+}
+
 void TargetSelector::tick() {
 	handleEncoder();
 	handleInputSelectionButton();
+	handleMoveToConversionButton();
 }

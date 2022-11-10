@@ -8,7 +8,7 @@ class HardwareButtonManager {
 private:
     SharedData* sharedData;
 public:
-    HardwareButtonManager(gpio_num_t enterButtonPin, gpio_num_t bottomOutButtonPin, gpio_num_t speedButtonPin, SharedData* sharedData);
+    HardwareButtonManager(gpio_num_t enterButtonPin, gpio_num_t bottomOutButtonPin, gpio_num_t speedButtonPin, gpio_num_t moveToConversionButtonPin, SharedData* sharedData);
     ~HardwareButtonManager();
     void tick();
 };

@@ -33,7 +33,8 @@ void Display::printCenterText(const char* text, int size) {
 }
 
 void Display::updatePositionReadings(bool blink) {
-	if(blink && (millis() / 1000) % 2 == 0) {
+	bool shouldClear = (millis() / 1000) % 2;
+	if (blink && shouldClear) {
 		u8g2->clearDisplay();
 		return;
 	}
@@ -55,7 +56,6 @@ void Display::updatePositionReadings(bool blink) {
 }
 
 void Display::updateCalibrationText() {
-	
 	u8g2->firstPage();
 	do {
 		printCenterText(CAL_NEEDED_TEXT, 10);
@@ -77,8 +77,18 @@ void Display::updateMovingText() {
 	} while (u8g2->nextPage());
 }
 
+bool Display::updateBlinkState() {
+	if (sharedData->getState() == OFFSET_ADJUSTING) {
+		bool currentState = (millis() / 1000) % 2;
+		bool stateChanged = currentState != lastBlinkState;
+		lastBlinkState = currentState;
+		return stateChanged;
+	}
+	return false;
+}
+
 void Display::tick() {
-	if (this->sharedData->shouldUpdateDisplay()) {
+	if (this->sharedData->shouldUpdateDisplay() || updateBlinkState()) {
 		switch(this->sharedData->getState()) {
 			case MachineState::CALIBRATION_NEEDED: 
 				updateCalibrationText();
@@ -103,3 +113,4 @@ void Display::tick() {
 		}
 	}
 }
+

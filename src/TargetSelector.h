@@ -10,13 +10,14 @@ class TargetSelector {
         RotaryEncoder* encoder;
         SharedData* sharedData;
         int prevEncPosition;
-        long fastRotationTill = 0;
+        long fastRotationTill = 0, fastRotationSince = 0;
         double lastDistance = 0;
         long currentInputPosition = 0;
         double lastValues[MAX_INPUTS];
         long lastTimestamps[MAX_INPUTS];
         void handleEncoder();
         void handleInputSelectionButton();
+        void handleMoveToConversionButton();
         void correctAccidentalInputs();
     public:
         TargetSelector(int pin1, int pin2, SharedData* sharedData);

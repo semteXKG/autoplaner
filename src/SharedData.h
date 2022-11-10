@@ -16,6 +16,7 @@ class SharedData {
         Bounce2::Button* enterButton;
         Bounce2::Button* speedButton;
         Bounce2::Button* bottomOut;
+        Bounce2::Button* moveToConversion;
         void setTargetPosition(double targetPosition);
         double getTargetPosition();
         void setCurrentPosition(double currentPosition);

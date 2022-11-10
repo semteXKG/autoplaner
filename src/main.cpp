@@ -18,6 +18,7 @@ static const gpio_num_t GO_BUTTON = GPIO_NUM_14;
 static const gpio_num_t BOTTOM_OUT_BUTTON = GPIO_NUM_27;
 static const gpio_num_t STEPPER_PULSE = GPIO_NUM_33;
 static const gpio_num_t STEPPER_DIR = GPIO_NUM_32;
+static const gpio_num_t MOVE_TO_CONVERSION_BUTTON = GPIO_NUM_16;
 
 Display* display;
 TargetSelector* inputManager;
@@ -31,13 +32,13 @@ void setup() {
 	Serial.begin(115200);
 	sharedData = new SharedData();
 	inputManager = new TargetSelector(18, 19, sharedData);
-	buttonManager = new HardwareButtonManager(GO_BUTTON, BOTTOM_OUT_BUTTON, SPEED_BUTTON, sharedData);
+	buttonManager = new HardwareButtonManager(GO_BUTTON, BOTTOM_OUT_BUTTON, SPEED_BUTTON, MOVE_TO_CONVERSION_BUTTON, sharedData);
 	environmentSensors = new EnvironmentSensors(sharedData);
 	calibrator = new Calibrator(sharedData);
 	display = new Display(sharedData);
 	stepperController = new StepperController(sharedData, STEPPER_PULSE, STEPPER_DIR);
 	sharedData->scheduleDisplayUpdate();
-	sharedData->switchState(MachineState::CALIBRATION_NEEDED);
+	sharedData->switchState(MachineState::IDLE);
 }
 
 void loop() {
