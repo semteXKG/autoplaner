@@ -11,6 +11,8 @@ private:
     void updatePositionReadings(bool blink);
     void updateCalibrationText();
     void updateCalibratingText();
+    void updateLockingText();
+    void updateUnlockingText();
     void updateMovingText();
     boolean updateBlinkState();
     void printCenterText(const char* text, int size = 24);

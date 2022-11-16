@@ -33,7 +33,7 @@ void Display::printCenterText(const char* text, int size) {
 }
 
 void Display::updatePositionReadings(bool blink) {
-	bool shouldClear = (millis() / 1000) % 2;
+	bool shouldClear = (millis() / 250) % 4;
 	if (blink && shouldClear) {
 		u8g2->clearDisplay();
 		return;
@@ -63,6 +63,20 @@ void Display::updateCalibrationText() {
 }
 
 
+void Display::updateLockingText() {
+	u8g2->firstPage();
+	do {
+		printCenterText(LOCKING_TEXT, 10);
+	} while (u8g2->nextPage());
+}
+
+void Display::updateUnlockingText() {
+	u8g2->firstPage();
+	do {
+		printCenterText(UNLOCKING_TEXT, 10);
+	} while (u8g2->nextPage());
+}
+
 void Display::updateCalibratingText() {
 	u8g2->firstPage();
 	do {
@@ -79,7 +93,7 @@ void Display::updateMovingText() {
 
 bool Display::updateBlinkState() {
 	if (sharedData->getState() == OFFSET_ADJUSTING) {
-		bool currentState = (millis() / 1000) % 2;
+		bool currentState = (millis() / 250) % 4;
 		bool stateChanged = currentState != lastBlinkState;
 		lastBlinkState = currentState;
 		return stateChanged;
@@ -101,6 +115,12 @@ void Display::tick() {
 				break;
 			case MachineState::OFFSET_ADJUSTING:
 				updatePositionReadings(true);
+				break;
+			case MachineState::LOCKING: 
+				updateLockingText();
+				break;
+			case MachineState::UNLOCKING: 
+				updateUnlockingText();
 				break;
 			case MachineState::PREP_MOVING:
 			case MachineState::MOVING_DOWN_OVERSHOOT:

@@ -57,7 +57,7 @@ MachineState SharedData::getState() {
 
 void SharedData::switchState(MachineState state) {
     Serial.print("Switching state to ");
-    Serial.println(state);
+    Serial.println(machineStateDesc[state]);
     this->state = state;
     scheduleDisplayUpdate();
 }

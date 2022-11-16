@@ -6,6 +6,7 @@ static const double MAX_POSITION = 210;
 static const double MIN_POSITION = 8;
 
 static const int PULSE_PER_MM = 800;
+static const int PULSE_LOCK_PER_ROT = 800;
 
 static const int OP_SPEED = 8 * PULSE_PER_MM;
 static const int CAL_SPEED = 0.5 * PULSE_PER_MM;
@@ -14,6 +15,8 @@ static const double CAL_POSITION_MM = 209.3;
 
 static const int DEAD_ZONE = PULSE_PER_MM * 0.05;
 static const int OVERSHOOT = PULSE_PER_MM;
+
+static const int LOCK_SPEED = 2 * PULSE_LOCK_PER_ROT;
 
 static const int ROTATION_ACCELERATION_TIMEOUT = 1000;
 static const int ROTATION_ACCELERATION_ENGAGE_DELAY = 10;
@@ -30,11 +33,22 @@ static const char* CAL_NEEDED_TEXT = "Cal needed";
 static const char* CAL_RUNNING_TEXT = "Cal running...";
 static const char* MOVING_TEXT = "moving...";
 
+static const char* LOCKING_TEXT = "locking...";
+static const char* UNLOCKING_TEXT = "unlocking";
+
+ static const char *machineStateDesc[] =
+{ "CALIBRATION_NEEDED", "CALIBRATING", "IDLE", "OFFSET_ADJUSTING", "PREP_LOCK", "PREP_UNLOCK", "LOCKING", "UNLOCKING", "PREP_MOVING", "MOVING_UP", "MOVING_DOWN_OVERSHOOT", "MOVING_DOWN_CORRECTION" }; 
+
+
 enum MachineState {
     CALIBRATION_NEEDED, 
     CALIBRATING,
     IDLE,
     OFFSET_ADJUSTING,
+    PREP_LOCK,
+    PREP_UNLOCK,
+    LOCKING,
+    UNLOCKING,
     PREP_MOVING,
     MOVING_UP,
     MOVING_DOWN_OVERSHOOT,

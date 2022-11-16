@@ -70,7 +70,7 @@ void TargetSelector::handleInputSelectionButton() {
 				correctAccidentalInputs();
 				if (sharedData->getTargetPosition() != sharedData->getCurrentPosition()) {
 					lastDistance = sharedData->getTargetPosition() - sharedData->getCurrentPosition();
-					sharedData->switchState(MachineState::PREP_MOVING);
+					sharedData->switchState(MachineState::PREP_UNLOCK);
 				} else {
 					sharedData->setTargetPosition(sharedData->getCurrentPosition() + lastDistance);
 				}

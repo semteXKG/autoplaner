@@ -9,16 +9,21 @@
 #include <HardwareButtonManager.h>
 #include <Calibrator.h>
 #include <StepperController.h>
-
+#include <LockController.h>
 
 #define DEBUG ""
 
 static const gpio_num_t SPEED_BUTTON = GPIO_NUM_12;
 static const gpio_num_t GO_BUTTON = GPIO_NUM_14;
 static const gpio_num_t BOTTOM_OUT_BUTTON = GPIO_NUM_27;
-static const gpio_num_t STEPPER_PULSE = GPIO_NUM_33;
-static const gpio_num_t STEPPER_DIR = GPIO_NUM_32;
 static const gpio_num_t MOVE_TO_CONVERSION_BUTTON = GPIO_NUM_16;
+
+static const gpio_num_t HEIGHT_STEPPER_PULSE = GPIO_NUM_33;
+static const gpio_num_t HEIGHT_STEPPER_DIR = GPIO_NUM_32;
+
+static const gpio_num_t LOCK_STEPPER_PULSE = GPIO_NUM_33;
+static const gpio_num_t LOCK_STEPPER_DIR = GPIO_NUM_32;
+
 
 Display* display;
 TargetSelector* inputManager;
@@ -27,6 +32,8 @@ EnvironmentSensors* environmentSensors;
 HardwareButtonManager* buttonManager;
 Calibrator* calibrator;
 StepperController* stepperController;
+LockController* lockController;
+
 
 void setup() {
 	Serial.begin(115200);
@@ -36,7 +43,8 @@ void setup() {
 	environmentSensors = new EnvironmentSensors(sharedData);
 	calibrator = new Calibrator(sharedData);
 	display = new Display(sharedData);
-	stepperController = new StepperController(sharedData, STEPPER_PULSE, STEPPER_DIR);
+	stepperController = new StepperController(sharedData, HEIGHT_STEPPER_PULSE, HEIGHT_STEPPER_DIR);
+	lockController = new LockController(sharedData, LOCK_STEPPER_PULSE, LOCK_STEPPER_DIR);
 	sharedData->scheduleDisplayUpdate();
 	sharedData->switchState(MachineState::IDLE);
 }
@@ -49,4 +57,5 @@ void loop() {
 	calibrator->tick();
 	display->tick();
 	stepperController->tick();
+	lockController->tick();
 }

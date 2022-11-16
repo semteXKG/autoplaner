@@ -68,8 +68,8 @@ void StepperController::handlePosition() {
         sharedData->switchState(MachineState::MOVING_DOWN_CORRECTION);
         stepper->move(DEAD_ZONE + OVERSHOOT);
     } else if((sharedData->getState() == MachineState::MOVING_DOWN_CORRECTION || sharedData->getState() == MachineState::MOVING_UP) && !stepper->isRunning()) {
-        Serial.println("going idle");
-        sharedData->switchState(IDLE);
+        Serial.println("going lock");
+        sharedData->switchState(PREP_LOCK);
     }
 }
 
