@@ -10,6 +10,7 @@
 #include <Calibrator.h>
 #include <StepperController.h>
 #include <LockController.h>
+#include <CalibrationOffsetHandler.h>
 
 #define DEBUG ""
 
@@ -33,7 +34,7 @@ HardwareButtonManager* buttonManager;
 Calibrator* calibrator;
 StepperController* stepperController;
 LockController* lockController;
-
+CalibrationOffsetHandler* calibrationOffsetHandler;
 
 void setup() {
 	Serial.begin(115200);
@@ -45,6 +46,7 @@ void setup() {
 	display = new Display(sharedData);
 	stepperController = new StepperController(sharedData, HEIGHT_STEPPER_PULSE, HEIGHT_STEPPER_DIR);
 	lockController = new LockController(sharedData, LOCK_STEPPER_PULSE, LOCK_STEPPER_DIR);
+	calibrationOffsetHandler = new CalibrationOffsetHandler(sharedData);
 	sharedData->scheduleDisplayUpdate();
 	sharedData->switchState(MachineState::IDLE);
 }
@@ -58,4 +60,5 @@ void loop() {
 	display->tick();
 	stepperController->tick();
 	lockController->tick();
+	calibrationOffsetHandler->tick();
 }

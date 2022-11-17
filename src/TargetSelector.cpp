@@ -53,7 +53,12 @@ void TargetSelector::handleEncoder() {
 	lastTimestamps[currentInputPosition % MAX_INPUTS] = millis();
 	currentInputPosition++;
 	
-	sharedData->setTargetPosition(sharedData->getTargetPosition() + (delta * increment));
+	if(sharedData->getState() == MachineState::IDLE) {
+		sharedData->setTargetPosition(sharedData->getTargetPosition() + (delta * increment));
+	} else if (sharedData->getState() == MachineState::OFFSET_ADJUSTING) {
+		sharedData->setOffset(sharedData->getOffset() + delta * increment);
+	}
+
 	sharedData->scheduleDisplayUpdate();
 	prevEncPosition = encoder->getPosition();
 }
@@ -64,21 +69,14 @@ void TargetSelector::handleInputSelectionButton() {
 		if (sharedData->getState() == IDLE) {
 			Serial.print("PrevDur: ");
 			Serial.println(sharedData->enterButton->previousDuration());
-			if (sharedData->enterButton->previousDuration() > LONG_PRESS_TIMEOUT_IN_MILLISECONDS) {
-				sharedData->switchState(MachineState::OFFSET_ADJUSTING);
+			correctAccidentalInputs();
+			if (sharedData->getTargetPosition() != sharedData->getCurrentPosition()) {
+				lastDistance = sharedData->getTargetPosition() - sharedData->getCurrentPosition();
+				sharedData->switchState(MachineState::PREP_UNLOCK);
 			} else {
-				correctAccidentalInputs();
-				if (sharedData->getTargetPosition() != sharedData->getCurrentPosition()) {
-					lastDistance = sharedData->getTargetPosition() - sharedData->getCurrentPosition();
-					sharedData->switchState(MachineState::PREP_UNLOCK);
-				} else {
-					sharedData->setTargetPosition(sharedData->getCurrentPosition() + lastDistance);
-				}
+				sharedData->setTargetPosition(sharedData->getCurrentPosition() + lastDistance);
 			}
 			sharedData->scheduleDisplayUpdate();	
-		} else if (sharedData->getState() == MachineState::OFFSET_ADJUSTING) {
-			sharedData->setCurrentPosition(sharedData->getTargetPosition());
-			sharedData->switchState(MachineState::IDLE);
 		}
 	}
 }

@@ -55,6 +55,15 @@ void Display::updatePositionReadings(bool blink) {
 	} while ( u8g2->nextPage() );
 }
 
+void Display::updateOffsetReadings() {
+	u8g2->firstPage();
+	do {
+		char output[20];	
+		sprintf(&output[0], "%03.1f", sharedData->getOffset());
+		printCenterText(output, 24);
+	} while ( u8g2->nextPage() );
+}
+
 void Display::updateCalibrationText() {
 	u8g2->firstPage();
 	do {
@@ -114,7 +123,7 @@ void Display::tick() {
 				updatePositionReadings(false);
 				break;
 			case MachineState::OFFSET_ADJUSTING:
-				updatePositionReadings(true);
+				updateOffsetReadings();
 				break;
 			case MachineState::LOCKING: 
 				updateLockingText();

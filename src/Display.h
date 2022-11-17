@@ -9,6 +9,7 @@ private:
     SharedData* sharedData;
     bool lastBlinkState = false;
     void updatePositionReadings(bool blink);
+    void updateOffsetReadings();
     void updateCalibrationText();
     void updateCalibratingText();
     void updateLockingText();

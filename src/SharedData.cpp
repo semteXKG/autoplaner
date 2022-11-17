@@ -37,6 +37,14 @@ void SharedData::setPosition(double position) {
     setTargetPosition(position);
 }
 
+void SharedData::setOffset(float offset) {
+    this->offset = offset;
+}
+
+double SharedData::getOffset() {
+    return offset;
+}
+
 void SharedData::scheduleDisplayUpdate() {
     if(this->nextDisplayUpdate == -1) {
         this->nextDisplayUpdate = millis() + DISPLAY_UPDATE_DELAY;
