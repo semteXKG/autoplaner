@@ -11,7 +11,6 @@ class TargetSelector {
         SharedData* sharedData;
         int prevEncPosition;
         long fastRotationTill = 0, fastRotationSince = 0;
-        double lastDistance = 0;
         long currentInputPosition = 0;
         double lastValues[MAX_INPUTS];
         long lastTimestamps[MAX_INPUTS];

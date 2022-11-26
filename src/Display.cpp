@@ -1,10 +1,14 @@
 #include <Display.h>
 #include <SharedData.h>
+#include <Wire.h>
 
 Display::Display(SharedData* sharedData) {
     this->sharedData = sharedData;
-    this->u8g2 = new U8G2_SH1106_128X64_NONAME_1_HW_I2C(U8G2_R0);
+	this->u8g2 = new U8G2_SH1106_128X64_NONAME_F_HW_I2C(U8G2_R0);
+	u8g2->setBusClock(1000000);
 	u8g2->begin();
+	Serial.print("clock: ");
+	Serial.println(Wire.getClock());
 }
 
 Display::~Display() {
@@ -22,8 +26,6 @@ void Display::printCenterText(const char* text, int size) {
 		u8g2->setFont(u8g2_font_profont17_mf);
 		break;
 	}
-    u8g2->drawHLine(0, 0, u8g2->getDisplayWidth());
-    u8g2->drawHLine(0, u8g2->getDisplayHeight()-1 , u8g2->getDisplayWidth());
     u8g2_uint_t width = u8g2->getUTF8Width(text);
 
     u8g2->drawStr(
@@ -39,65 +41,45 @@ void Display::updatePositionReadings(bool blink) {
 		return;
 	}
 
-	u8g2->firstPage();
-	do {
-		char output[20];	
-		int size;
-		if((sharedData->getCurrentPosition() == sharedData->getTargetPosition())) {
-			sprintf(&output[0], "%03.1f", sharedData->getCurrentPosition());
-			size = 24;
-		} else {
-			sprintf(&output[0], "%03.1f (%03.1f)", sharedData->getTargetPosition(), 
-                sharedData->getTargetPosition() - sharedData->getCurrentPosition());
-			size = 10;
-		}	
-		printCenterText(output, size);
-	} while ( u8g2->nextPage() );
+	char output[20];	
+	int size;
+	if((sharedData->getCurrentPosition() == sharedData->getTargetPosition())) {
+		sprintf(&output[0], "%03.1f", sharedData->getCurrentPosition());
+		size = 24;
+	} else {
+		sprintf(&output[0], "%03.1f (%03.1f)", sharedData->getTargetPosition(), sharedData->getTargetPosition() - sharedData->getCurrentPosition());
+		size = 10;
+	}	
+	printCenterText(output, size);
 }
 
 void Display::updateOffsetReadings() {
-	u8g2->firstPage();
-	do {
-		char output[20];	
-		sprintf(&output[0], "%03.1f", sharedData->getOffset());
-		printCenterText(output, 24);
-	} while ( u8g2->nextPage() );
+	u8g2->setFont(u8g2_font_profont11_tr);
+	u8g2->drawStr(4, u8g2->getMaxCharHeight() + 1, "Offset Adjust");
+	char output[20];	
+	sprintf(&output[0], "%03.1f", sharedData->getOffset());
+	printCenterText(output, 24);
 }
 
 void Display::updateCalibrationText() {
-	u8g2->firstPage();
-	do {
-		printCenterText(CAL_NEEDED_TEXT, 10);
-	} while (u8g2->nextPage());
+	printCenterText(CAL_NEEDED_TEXT, 10);
 }
 
 
 void Display::updateLockingText() {
-	u8g2->firstPage();
-	do {
-		printCenterText(LOCKING_TEXT, 10);
-	} while (u8g2->nextPage());
+	printCenterText(LOCKING_TEXT, 10);
 }
 
 void Display::updateUnlockingText() {
-	u8g2->firstPage();
-	do {
-		printCenterText(UNLOCKING_TEXT, 10);
-	} while (u8g2->nextPage());
+	printCenterText(UNLOCKING_TEXT, 10);
 }
 
 void Display::updateCalibratingText() {
-	u8g2->firstPage();
-	do {
-		printCenterText(CAL_RUNNING_TEXT, 10);
-	} while (u8g2->nextPage());
+	printCenterText(CAL_RUNNING_TEXT, 10);
 }
 
 void Display::updateMovingText() {
-	u8g2->firstPage();
-	do {
-		printCenterText(MOVING_TEXT, 10);
-	} while (u8g2->nextPage());
+	printCenterText(MOVING_TEXT, 10);
 }
 
 bool Display::updateBlinkState() {
@@ -110,8 +92,25 @@ bool Display::updateBlinkState() {
 	return false;
 }
 
+void Display::printBorder() {
+    u8g2->drawHLine(0, 0, u8g2->getDisplayWidth());
+    u8g2->drawHLine(0, u8g2->getDisplayHeight()-1 , u8g2->getDisplayWidth());
+	u8g2->drawVLine(0, 0, u8g2->getDisplayHeight()-1);
+	u8g2->drawVLine(u8g2->getDisplayWidth() -1, 0, u8g2->getDisplayHeight()-1);
+}
+
+void Display::printPrevious() {
+	u8g2->setFont(u8g2_font_profont11_tr);
+	char output[20];	
+	sprintf(&output[0], "Prev: %03.1f", sharedData->getLastDistance());
+	int width = u8g2->getUTF8Width(output);
+	u8g2->drawStr(u8g2->getDisplayWidth() - width - 4, u8g2->getMaxCharHeight() + 1, output);
+}
+
 void Display::tick() {
 	if (this->sharedData->shouldUpdateDisplay() || updateBlinkState()) {
+		u8g2->clearBuffer();
+		printBorder();
 		switch(this->sharedData->getState()) {
 			case MachineState::CALIBRATION_NEEDED: 
 				updateCalibrationText();
@@ -120,6 +119,7 @@ void Display::tick() {
 				updateCalibratingText();
 				break;
 			case MachineState::IDLE:
+				printPrevious();
 				updatePositionReadings(false);
 				break;
 			case MachineState::OFFSET_ADJUSTING:
@@ -140,6 +140,7 @@ void Display::tick() {
 			default:
 			break;
 		}
+		u8g2->sendBuffer();
 	}
 }
 

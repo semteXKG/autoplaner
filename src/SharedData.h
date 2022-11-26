@@ -10,6 +10,7 @@ class SharedData {
         double currentPosition;
         double offset;
         long nextDisplayUpdate = -1;
+        double lastDistance = 0;
         MachineState state;
     public:
         SharedData();
@@ -25,6 +26,8 @@ class SharedData {
         void setPosition(double position);
         void setOffset(float offset);
         double getOffset();
+        double getLastDistance();
+        void setLastDistance(double lastDistance);
         void scheduleDisplayUpdate();
         bool shouldUpdateDisplay();
         void switchState(MachineState state);

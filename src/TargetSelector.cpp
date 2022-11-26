@@ -71,10 +71,10 @@ void TargetSelector::handleInputSelectionButton() {
 			Serial.println(sharedData->enterButton->previousDuration());
 			correctAccidentalInputs();
 			if (sharedData->getTargetPosition() != sharedData->getCurrentPosition()) {
-				lastDistance = sharedData->getTargetPosition() - sharedData->getCurrentPosition();
+				sharedData->setLastDistance(sharedData->getTargetPosition() - sharedData->getCurrentPosition());
 				sharedData->switchState(MachineState::PREP_UNLOCK);
 			} else {
-				sharedData->setTargetPosition(sharedData->getCurrentPosition() + lastDistance);
+				sharedData->setTargetPosition(sharedData->getCurrentPosition() + sharedData->getLastDistance());
 			}
 			sharedData->scheduleDisplayUpdate();	
 		}

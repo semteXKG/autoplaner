@@ -45,6 +45,14 @@ double SharedData::getOffset() {
     return offset;
 }
 
+double SharedData::getLastDistance() {
+    return lastDistance;
+}
+
+void SharedData::setLastDistance(double lastDistance) {
+    this->lastDistance = lastDistance;
+}
+
 void SharedData::scheduleDisplayUpdate() {
     if(this->nextDisplayUpdate == -1) {
         this->nextDisplayUpdate = millis() + DISPLAY_UPDATE_DELAY;
