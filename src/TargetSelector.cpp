@@ -67,10 +67,8 @@ void TargetSelector::handleEncoder() {
 
 
 void TargetSelector::handleInputSelectionButton() {
-	if (sharedData->enterButton->rose()) {
-		if (sharedData->getState() == IDLE) {
-			Serial.print("PrevDur: ");
-			Serial.println(sharedData->enterButton->previousDuration());
+	if (sharedData->getState() == IDLE) {
+		if (sharedData->enterButton->rose() && hasCorrectInputSource) {
 			correctAccidentalInputs();
 			if (sharedData->getTargetPosition() != sharedData->getCurrentPosition()) {
 				sharedData->setLastDistance(sharedData->getTargetPosition() - sharedData->getCurrentPosition());
@@ -80,7 +78,13 @@ void TargetSelector::handleInputSelectionButton() {
 			}
 			sharedData->scheduleDisplayUpdate();	
 		}
+		if(sharedData->enterButton->fell()) {
+			hasCorrectInputSource = true;
+		}
+	} else {
+		hasCorrectInputSource = false;
 	}
+	
 }
 
 void TargetSelector::correctAccidentalInputs() {
