@@ -13,13 +13,15 @@ TargetSelector::~TargetSelector() {
 void TargetSelector::handleEncoder() {
     encoder->tick();
 	// Loop and read the count
-	
+
+	int32_t delta = encoder->getPosition() - prevEncPosition;	
+	sharedData->setLastRotation(delta);
+
 	if(this->sharedData->getState() != MachineState::IDLE && this->sharedData->getState() != MachineState::OFFSET_ADJUSTING) {
 		this->prevEncPosition = encoder->getPosition();
 		return;
 	}
 
-	int32_t delta = encoder->getPosition() - prevEncPosition;	
 	if(delta == 0) {
 		return;
 	}

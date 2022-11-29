@@ -53,6 +53,25 @@ void SharedData::setLastDistance(double lastDistance) {
     this->lastDistance = lastDistance;
 }
 
+void SharedData::setMenuEntries(char* upper, char* mid, char* low) {
+    menuEntries[0] = upper;
+    menuEntries[1] = mid;
+    menuEntries[2] = low;
+}
+
+char** SharedData::getMenuEntries() {
+    return menuEntries;
+}
+
+void SharedData::setLastRotation(int lastRotation) {
+    this->lastRotation = lastRotation;
+}
+
+int SharedData::getLastRotation() {
+    return lastRotation;
+}
+
+
 void SharedData::scheduleDisplayUpdate() {
     if(this->nextDisplayUpdate == -1) {
         this->nextDisplayUpdate = millis() + DISPLAY_UPDATE_DELAY;

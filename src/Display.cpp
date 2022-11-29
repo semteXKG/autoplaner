@@ -107,6 +107,29 @@ void Display::printPrevious() {
 	u8g2->drawStr(u8g2->getDisplayWidth() - width - 4, u8g2->getMaxCharHeight() + 1, output);
 }
 
+void Display::printSelectionMenu() {
+	char* upper = sharedData->getMenuEntries()[0];
+	if (upper != NULL) {
+		u8g2->setFont(u8g2_font_profont10_tr);
+		int width = u8g2->getUTF8Width(upper);
+		u8g2->drawStr(u8g2->getDisplayWidth() / 2 - width / 2, u8g2->getMaxCharHeight() + 5, upper);
+	}
+
+	char* mid = sharedData->getMenuEntries()[1];
+	if(mid !=  NULL) {
+		u8g2->setFont(u8g2_font_profont15_tf);
+		int width = u8g2->getUTF8Width(mid);
+		u8g2->drawStr(u8g2->getDisplayWidth() / 2 - width / 2, u8g2->getDisplayHeight() / 2 + u8g2->getMaxCharHeight() / 2 - 4, mid);
+	}
+	
+	char* lower = sharedData->getMenuEntries()[2];
+	if (lower != NULL) {
+		u8g2->setFont(u8g2_font_profont10_tr);
+		int width = u8g2->getUTF8Width(lower);
+		u8g2->drawStr(u8g2->getDisplayWidth() / 2 - width / 2, u8g2->getDisplayHeight() - u8g2->getMaxCharHeight() - 2, lower);
+	}
+}
+
 void Display::tick() {
 	if (this->sharedData->shouldUpdateDisplay() || updateBlinkState()) {
 		u8g2->clearBuffer();
@@ -121,6 +144,9 @@ void Display::tick() {
 			case MachineState::IDLE:
 				printPrevious();
 				updatePositionReadings(false);
+				break;
+			case MachineState::SELECTION_MENU:
+				printSelectionMenu();
 				break;
 			case MachineState::OFFSET_ADJUSTING:
 				updateOffsetReadings();

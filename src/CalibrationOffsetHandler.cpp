@@ -11,12 +11,6 @@ CalibrationOffsetHandler::~CalibrationOffsetHandler() {
 }
 
 void CalibrationOffsetHandler::tick() {
-    if(sharedData->getState() == MachineState::IDLE && 
-        sharedData->enterButton->isPressed() && 
-        sharedData->enterButton->currentDuration() > LONG_PRESS_TIMEOUT_IN_MILLISECONDS) {
-            sharedData->switchState(MachineState::OFFSET_ADJUSTING);
-    }
-
     if(sharedData->getState() == MachineState::OFFSET_ADJUSTING &&
         sharedData->enterButton->pressed()) {
             float oldOffset = NVS.getFloat(KEY_OFFSET);

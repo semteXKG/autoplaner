@@ -11,6 +11,8 @@ class SharedData {
         double offset;
         long nextDisplayUpdate = -1;
         double lastDistance = 0;
+        int lastRotation = 0;
+        char* menuEntries[3];
         MachineState state;
     public:
         SharedData();
@@ -28,6 +30,10 @@ class SharedData {
         double getOffset();
         double getLastDistance();
         void setLastDistance(double lastDistance);
+        void setMenuEntries(char* upper, char* mid, char* low);
+        char** getMenuEntries();
+        void setLastRotation(int rotation);
+        int getLastRotation();
         void scheduleDisplayUpdate();
         bool shouldUpdateDisplay();
         void switchState(MachineState state);

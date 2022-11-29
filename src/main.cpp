@@ -11,6 +11,7 @@
 #include <StepperController.h>
 #include <LockController.h>
 #include <CalibrationOffsetHandler.h>
+#include <MenuHandler.h>
 
 #define DEBUG ""
 
@@ -35,6 +36,7 @@ Calibrator* calibrator;
 StepperController* stepperController;
 LockController* lockController;
 CalibrationOffsetHandler* calibrationOffsetHandler;
+MenuHandler* menuHandler;
 
 void setup() {
 	Serial.begin(115200);
@@ -47,6 +49,7 @@ void setup() {
 	stepperController = new StepperController(sharedData, HEIGHT_STEPPER_PULSE, HEIGHT_STEPPER_DIR);
 	lockController = new LockController(sharedData, LOCK_STEPPER_PULSE, LOCK_STEPPER_DIR);
 	calibrationOffsetHandler = new CalibrationOffsetHandler(sharedData);
+	menuHandler = new MenuHandler(sharedData);
 	sharedData->scheduleDisplayUpdate();
 	sharedData->switchState(MachineState::IDLE);
 }
@@ -61,4 +64,5 @@ void loop() {
 	stepperController->tick();
 	lockController->tick();
 	calibrationOffsetHandler->tick();
+	menuHandler->tick();
 }
