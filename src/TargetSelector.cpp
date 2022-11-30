@@ -17,7 +17,7 @@ void TargetSelector::handleEncoder() {
 	int32_t delta = encoder->getPosition() - prevEncPosition;	
 	sharedData->setLastRotation(delta);
 
-	if(this->sharedData->getState() != MachineState::IDLE && this->sharedData->getState() != MachineState::OFFSET_ADJUSTING) {
+	if(this->sharedData->getState() != MachineState::IDLE && this->sharedData->getState() != MachineState::SETTINGS_OFFSET_ADJUSTING) {
 		this->prevEncPosition = encoder->getPosition();
 		return;
 	}
@@ -57,7 +57,7 @@ void TargetSelector::handleEncoder() {
 	
 	if(sharedData->getState() == MachineState::IDLE) {
 		sharedData->setTargetPosition(sharedData->getTargetPosition() + (delta * increment));
-	} else if (sharedData->getState() == MachineState::OFFSET_ADJUSTING) {
+	} else if (sharedData->getState() == MachineState::SETTINGS_OFFSET_ADJUSTING) {
 		sharedData->setOffset(sharedData->getOffset() + delta * increment);
 	}
 

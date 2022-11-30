@@ -83,7 +83,7 @@ void Display::updateMovingText() {
 }
 
 bool Display::updateBlinkState() {
-	if (sharedData->getState() == OFFSET_ADJUSTING) {
+	if (sharedData->getState() == MachineState::SETTINGS_OFFSET_ADJUSTING) {
 		bool currentState = (millis() / 250) % 4;
 		bool stateChanged = currentState != lastBlinkState;
 		lastBlinkState = currentState;
@@ -105,6 +105,14 @@ void Display::printPrevious() {
 	sprintf(&output[0], "Prev: %03.1f", sharedData->getLastDistance());
 	int width = u8g2->getUTF8Width(output);
 	u8g2->drawStr(u8g2->getDisplayWidth() - width - 4, u8g2->getMaxCharHeight() + 1, output);
+}
+
+void Display::printLockState() {
+	if(sharedData->isLocked()) {
+		u8g2->drawXBMP(4, 4, locked_width, locked_height, locked_bits);
+	} else {
+		u8g2->drawXBMP(4, 4, unlocked_width, unlocked_height, unlocked_bits);
+	}
 }
 
 void Display::printSelectionMenu() {
@@ -143,12 +151,13 @@ void Display::tick() {
 				break;
 			case MachineState::IDLE:
 				printPrevious();
+				printLockState();
 				updatePositionReadings(false);
 				break;
-			case MachineState::SELECTION_MENU:
+			case MachineState::SETTINGS_MENU:
 				printSelectionMenu();
 				break;
-			case MachineState::OFFSET_ADJUSTING:
+			case MachineState::SETTINGS_OFFSET_ADJUSTING:
 				updateOffsetReadings();
 				break;
 			case MachineState::LOCKING: 

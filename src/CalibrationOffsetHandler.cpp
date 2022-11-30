@@ -11,7 +11,7 @@ CalibrationOffsetHandler::~CalibrationOffsetHandler() {
 }
 
 void CalibrationOffsetHandler::tick() {
-    if(sharedData->getState() == MachineState::OFFSET_ADJUSTING &&
+    if(sharedData->getState() == MachineState::SETTINGS_OFFSET_ADJUSTING &&
         sharedData->enterButton->pressed()) {
             float oldOffset = NVS.getFloat(KEY_OFFSET);
             double diff = sharedData->getOffset() - oldOffset;

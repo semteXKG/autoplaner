@@ -17,6 +17,7 @@ private:
     void updateMovingText();
     void printBorder();
     void printPrevious();
+    void printLockState();
     void printSelectionMenu();
     boolean updateBlinkState();
     void printCenterText(const char* text, int size = 24);

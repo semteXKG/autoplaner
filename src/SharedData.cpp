@@ -71,6 +71,16 @@ int SharedData::getLastRotation() {
     return lastRotation;
 }
 
+bool SharedData::isLocked() {
+    return locked;
+}
+
+void SharedData::setLocked(bool locked) {
+    Serial.print("locked: ");
+    Serial.println(locked);
+    this->locked = locked;
+    scheduleDisplayUpdate();
+}
 
 void SharedData::scheduleDisplayUpdate() {
     if(this->nextDisplayUpdate == -1) {
@@ -92,7 +102,10 @@ MachineState SharedData::getState() {
 
 void SharedData::switchState(MachineState state) {
     Serial.print("Switching state to ");
+    Serial.print(state);
+    Serial.print(" - ");
     Serial.println(machineStateDesc[state]);
+    
     this->state = state;
     scheduleDisplayUpdate();
 }

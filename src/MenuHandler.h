@@ -6,10 +6,11 @@
 class MenuHandler {
 private:
     SharedData* sharedData;
-    char *menu[3] = { "Offset Adjust", "Locking Status", "Lock Operation" };
+    LockController* lockController;
+    char *menu[4];
     int currentlySelected = 0;
 public:
-    MenuHandler(SharedData* sharedData);
+    MenuHandler(SharedData* sharedData, LockController* lockController);
     ~MenuHandler();
     void handleMenuUpdate();
     void handleMenuEnter();
@@ -18,8 +19,13 @@ public:
     void tick();
 };
 
-MenuHandler::MenuHandler(SharedData* sharedData) {
+MenuHandler::MenuHandler(SharedData* sharedData, LockController* lockController) {
     this->sharedData = sharedData;
+    this->lockController = lockController;
+    menu[0] = strdup("1. Offset Adjust");
+    menu[1] = strdup("2. LCK Status");
+    menu[2] = strdup("3. LCK Operation");
+    menu[3] = strdup("4. Shutdown");
 }
 
 MenuHandler::~MenuHandler() {
@@ -30,12 +36,12 @@ void MenuHandler::handleMenuEnter() {
     if(sharedData->getState() == MachineState::IDLE 
         && sharedData->enterButton->isPressed() 
         && sharedData->enterButton->currentDuration() > LONG_PRESS_TIMEOUT_IN_MILLISECONDS) {
-            sharedData->switchState(MachineState::SELECTION_MENU);
+            sharedData->switchState(MachineState::SETTINGS_MENU);
     }
 }
 
 void MenuHandler::handleMenuUpdate() {  
-    if (sharedData->getState() == MachineState::SELECTION_MENU) {
+    if (sharedData->getState() == MachineState::SETTINGS_MENU) {
         
         char* upper = currentlySelected - 1 >= 0 ? menu[currentlySelected-1] : NULL;
         char* mid = menu[currentlySelected];
@@ -46,7 +52,7 @@ void MenuHandler::handleMenuUpdate() {
 }
 
 void MenuHandler::handleInputChange() {
-    if (sharedData->getState() == MachineState::SELECTION_MENU) {
+    if (sharedData->getState() == MachineState::SETTINGS_MENU) {
         if(sharedData->getLastRotation() > 0 ) {
             currentlySelected = currentlySelected + (currentlySelected < sizeof(menu)/sizeof(char*) - 1 ? 1 : 0);
         } else if (sharedData->getLastRotation() < 0) {
@@ -56,7 +62,7 @@ void MenuHandler::handleInputChange() {
 }
 
 void MenuHandler::handleEnterPressed() {
-    if(sharedData->getState() != MachineState::SELECTION_MENU) {
+    if(sharedData->getState() != MachineState::SETTINGS_MENU) {
         return;
     }
 
@@ -66,10 +72,21 @@ void MenuHandler::handleEnterPressed() {
 
     switch(currentlySelected) {
         case 0: 
-            sharedData->switchState(MachineState::OFFSET_ADJUSTING);        
+            sharedData->switchState(MachineState::SETTINGS_OFFSET_ADJUSTING);        
             break;
-        case 1: break;
-        case 2: break;
+        case 1: 
+            sharedData->setLocked(!sharedData->isLocked());
+            sharedData->switchState(MachineState::IDLE);        
+            break;
+        case 2: 
+            if (sharedData->isLocked()) {
+                lockController->unlock();
+            } else {
+                lockController->lock();
+            }
+            sharedData->switchState(MachineState::IDLE);        
+            break;
+        case 3: break;
         default: break;
     }
 }

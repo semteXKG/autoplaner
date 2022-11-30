@@ -49,7 +49,7 @@ void setup() {
 	stepperController = new StepperController(sharedData, HEIGHT_STEPPER_PULSE, HEIGHT_STEPPER_DIR);
 	lockController = new LockController(sharedData, LOCK_STEPPER_PULSE, LOCK_STEPPER_DIR);
 	calibrationOffsetHandler = new CalibrationOffsetHandler(sharedData);
-	menuHandler = new MenuHandler(sharedData);
+	menuHandler = new MenuHandler(sharedData, lockController);
 	sharedData->scheduleDisplayUpdate();
 	sharedData->switchState(MachineState::IDLE);
 }

@@ -12,6 +12,8 @@ class LockController {
     public:
         LockController(SharedData* sharedData, gpio_num_t pulsePin, gpio_num_t directionPin);
         void tick();
+        void lock();
+        void unlock();
 };
 
 #endif

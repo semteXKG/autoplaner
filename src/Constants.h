@@ -36,16 +36,48 @@ static const char* MOVING_TEXT = "moving...";
 static const char* LOCKING_TEXT = "locking...";
 static const char* UNLOCKING_TEXT = "unlocking";
 
+#define locked_width 9
+#define locked_height 12
+static unsigned char locked_bits[] = {
+   0x38, 0x00, 0x6c, 0x00, 0x44, 0x00, 0x44, 0x00, 0xfe, 0x00, 0xff, 0x01,
+   0xff, 0x01, 0xff, 0x01, 0xff, 0x01, 0xff, 0x01, 0xff, 0x01, 0xff, 0x01 };
+
+
+#define unlocked_width 11
+#define unlocked_height 12
+static unsigned char unlocked_bits[] = {
+   0x80, 0x03, 0xc0, 0x06, 0x40, 0x04, 0x40, 0x04, 0xfe, 0x00, 0xff, 0x01,
+   0xff, 0x01, 0xff, 0x01, 0xff, 0x01, 0xff, 0x01, 0xff, 0x01, 0xff, 0x01 };
+
+
  static const char *machineStateDesc[] =
-{ "CALIBRATION_NEEDED", "CALIBRATING", "IDLE", "SELECTION_MENU", "OFFSET_ADJUSTING", "PREP_LOCK", "PREP_UNLOCK", "LOCKING", "UNLOCKING", "PREP_MOVING", "MOVING_UP", "MOVING_DOWN_OVERSHOOT", "MOVING_DOWN_CORRECTION" }; 
+{ "0 - CALIBRATION_NEEDED", 
+"1 - CALIBRATING", 
+"2 - IDLE", 
+"3 - SETTINGS_MENU", 
+"4 - SETTINGS_OFFSET_ADJUSTING", 
+"5 - SETTINGS_LOCKING_STATUS_ADJUST",
+"6 - SETTINGS_LOCK_OPERATION",
+"7 - SETTINGS_SHUTDOWN",
+"8 - PREP_LOCK", 
+"9 - PREP_UNLOCK", 
+"10 - LOCKING", 
+"11 - UNLOCKING", 
+"12 - PREP_MOVING", 
+"13 - MOVING_UP", 
+"14 - MOVING_DOWN_OVERSHOOT", 
+"15 - MOVING_DOWN_CORRECTION" }; 
 
 
 enum MachineState {
     CALIBRATION_NEEDED, 
     CALIBRATING,
     IDLE,
-    SELECTION_MENU,
-    OFFSET_ADJUSTING,
+    SETTINGS_MENU,
+    SETTINGS_OFFSET_ADJUSTING,
+    SETTINGS_LOCKING_STATUS_ADJUST,
+    SETTINGS_LOCK_OPERATION,
+    SETTINGS_SHUTDOWN,
     PREP_LOCK,
     PREP_UNLOCK,
     LOCKING,

@@ -9,21 +9,38 @@ LockController::LockController(SharedData* sharedData, gpio_num_t pulsePin, gpio
 }
 
 void LockController::tick() {
+    stepper->run();
     if(sharedData->getState() == PREP_UNLOCK) {
-        stepper->move(5 * PULSE_LOCK_PER_ROT);
+        if(!sharedData->isLocked()) {
+            sharedData->switchState(PREP_MOVING);
+            return;
+        }
+        unlock();
         sharedData->switchState(UNLOCKING);
     } else if ( sharedData->getState() == PREP_LOCK) {
-        stepper->move(-5 * PULSE_LOCK_PER_ROT);
+        if(sharedData->isLocked()) {
+            sharedData->switchState(MachineState::IDLE);
+            return;
+        }
+        lock();
         sharedData->switchState(LOCKING);
     } else if (sharedData->getState() == LOCKING) {
-        stepper->run();
         if (!stepper->isRunning()) {
             sharedData->switchState(IDLE);
         }
     } else if (sharedData->getState() == UNLOCKING) {
-        stepper->run();
         if (!stepper->isRunning()) {
             sharedData->switchState(PREP_MOVING);
         }
     }
+}
+
+void LockController::lock() {
+    stepper->move(5 * PULSE_LOCK_PER_ROT);
+    sharedData->setLocked(true);
+}
+
+void LockController::unlock() {
+    stepper->move(-5 * PULSE_LOCK_PER_ROT);
+    sharedData->setLocked(false);
 }

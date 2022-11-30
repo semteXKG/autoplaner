@@ -13,6 +13,7 @@ class SharedData {
         double lastDistance = 0;
         int lastRotation = 0;
         char* menuEntries[3];
+        bool locked = false;
         MachineState state;
     public:
         SharedData();
@@ -34,6 +35,8 @@ class SharedData {
         char** getMenuEntries();
         void setLastRotation(int rotation);
         int getLastRotation();
+        bool isLocked();
+        void setLocked(bool locked);
         void scheduleDisplayUpdate();
         bool shouldUpdateDisplay();
         void switchState(MachineState state);
