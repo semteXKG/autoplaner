@@ -82,6 +82,10 @@ void SharedData::setLocked(bool locked) {
     scheduleDisplayUpdate();
 }
 
+void SharedData::markCalibrationDone() {
+    this->calibrationDone = true;
+}
+
 void SharedData::scheduleDisplayUpdate() {
     if(this->nextDisplayUpdate == -1) {
         this->nextDisplayUpdate = millis() + DISPLAY_UPDATE_DELAY;
@@ -101,6 +105,10 @@ MachineState SharedData::getState() {
 }
 
 void SharedData::switchState(MachineState state) {
+    if(state == IDLE && !calibrationDone) {
+        Serial.print("Cannot go idle without calibration ");
+        state = MachineState::CALIBRATION_NEEDED;
+    }
     Serial.print("Switching state to ");
     Serial.print(state);
     Serial.print(" - ");

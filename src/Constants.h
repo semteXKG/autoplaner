@@ -29,11 +29,11 @@ static const int IGNORE_ACCIDENTAL_INPUT_DELAY_MS = 250;
 
 static const int TIMEOUT_MOVE_TO_CONVERSION = 500;
 
-static const char* CAL_NEEDED_TEXT = "Cal needed";
-static const char* CAL_RUNNING_TEXT = "Cal running...";
+static const char* CAL_NEEDED_TEXT = "Calib needed";
+static const char* CAL_RUNNING_TEXT = "Calibrating.";
 static const char* MOVING_TEXT = "moving...";
 
-static const char* LOCKING_TEXT = "locking...";
+static const char* LOCKING_TEXT = "locking";
 static const char* UNLOCKING_TEXT = "unlocking";
 
 #define locked_width 9
@@ -51,26 +51,28 @@ static unsigned char unlocked_bits[] = {
 
 
  static const char *machineStateDesc[] =
-{ "0 - CALIBRATION_NEEDED", 
-"1 - CALIBRATING", 
-"2 - IDLE", 
-"3 - SETTINGS_MENU", 
-"4 - SETTINGS_OFFSET_ADJUSTING", 
-"5 - SETTINGS_LOCKING_STATUS_ADJUST",
-"6 - SETTINGS_LOCK_OPERATION",
-"7 - SETTINGS_SHUTDOWN",
-"8 - PREP_LOCK", 
-"9 - PREP_UNLOCK", 
-"10 - LOCKING", 
-"11 - UNLOCKING", 
-"12 - PREP_MOVING", 
-"13 - MOVING_UP", 
-"14 - MOVING_DOWN_OVERSHOOT", 
-"15 - MOVING_DOWN_CORRECTION" }; 
+{ "CALIBRATION_NEEDED", 
+"PREP CALIBRATION",
+"CALIBRATING", 
+"IDLE", 
+"SETTINGS_MENU", 
+"SETTINGS_OFFSET_ADJUSTING", 
+"SETTINGS_LOCKING_STATUS_ADJUST",
+"SETTINGS_LOCK_OPERATION",
+"SETTINGS_SHUTDOWN",
+"PREP_LOCK", 
+"PREP_UNLOCK", 
+"LOCKING", 
+"UNLOCKING", 
+"PREP_MOVING", 
+"MOVING_UP", 
+"MOVING_DOWN_OVERSHOOT", 
+"MOVING_DOWN_CORRECTION" }; 
 
 
 enum MachineState {
-    CALIBRATION_NEEDED, 
+    CALIBRATION_NEEDED,
+    PREP_CALIBRATION, 
     CALIBRATING,
     IDLE,
     SETTINGS_MENU,

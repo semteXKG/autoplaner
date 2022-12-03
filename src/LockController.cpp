@@ -32,6 +32,10 @@ void LockController::tick() {
         if (!stepper->isRunning()) {
             sharedData->switchState(PREP_MOVING);
         }
+    } else if (sharedData->getState() == MachineState::PREP_CALIBRATION) {
+        if(!stepper->isRunning()) {
+            sharedData->switchState(CALIBRATING);
+        }
     }
 }
 

@@ -147,6 +147,7 @@ void Display::tick() {
 				updateCalibrationText();
 				break;
 			case MachineState::CALIBRATING: 
+			case MachineState::PREP_CALIBRATION:
 				updateCalibratingText();
 				break;
 			case MachineState::IDLE:

@@ -1,34 +1,18 @@
 #include <Calibrator.h>
 
-Calibrator::Calibrator(SharedData* sharedData) {
+Calibrator::Calibrator(SharedData* sharedData, LockController* lockController) {
     this->sharedData = sharedData;
+    this->lockController = lockController;
 }
 
 Calibrator::~Calibrator() {
 }
 
 void Calibrator::tick() {
-    if(this->sharedData->getState() == MachineState::CALIBRATION_NEEDED && this->sharedData->enterButton->rose()) {
+    if(this->sharedData->getState() == MachineState::CALIBRATION_NEEDED && this->sharedData->enterButton->rose() && !this->sharedData->bottomOut->isPressed()) {
         Serial.println("Starting Calibration");
-        this->calibrationRunning = true;
-        this->sharedData->switchState(CALIBRATING);
+        calibrationRunning = true;
+        lockController->unlock();
+        sharedData->switchState(PREP_CALIBRATION);
     }
-
-/*    if(this->sharedData->getState() == CALIBRATING) {
-        if(this->sharedData->bottomOutPressed) {
-            Serial.println("Calibration done");
-            this->sharedData->setCurrentPosition(210.0);
-            this->sharedData->setTargetPosition(210.0);
-            this->sharedData->switchState(MachineState::IDLE);
-            this->calibrationRunning = false;
-        }
-    }*/
-}
-
-void Calibrator::startCalibration() {
-    if (this->sharedData->bottomOut->isPressed()) {
-        Serial.println("ERROR; BOTTOM OUT!");
-    } else {
-        this->calibrationRunning = true;
-    } 
 }

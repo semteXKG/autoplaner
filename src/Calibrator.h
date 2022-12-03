@@ -3,14 +3,15 @@
 
 #include <Arduino.h>
 #include <SharedData.h>
+#include <LockController.h>
 
 class Calibrator {
 private:
     SharedData* sharedData;
+    LockController* lockController;
     bool calibrationRunning;
-    void startCalibration();
 public:
-    Calibrator(SharedData* sharedData);
+    Calibrator(SharedData* sharedData, LockController* lockController);
     ~Calibrator();
     void tick();
 };

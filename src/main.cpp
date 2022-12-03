@@ -23,8 +23,8 @@ static const gpio_num_t MOVE_TO_CONVERSION_BUTTON = GPIO_NUM_16;
 static const gpio_num_t HEIGHT_STEPPER_PULSE = GPIO_NUM_33;
 static const gpio_num_t HEIGHT_STEPPER_DIR = GPIO_NUM_32;
 
-static const gpio_num_t LOCK_STEPPER_PULSE = GPIO_NUM_33;
-static const gpio_num_t LOCK_STEPPER_DIR = GPIO_NUM_32;
+static const gpio_num_t LOCK_STEPPER_PULSE = GPIO_NUM_15;
+static const gpio_num_t LOCK_STEPPER_DIR = GPIO_NUM_2;
 
 
 Display* display;
@@ -44,14 +44,14 @@ void setup() {
 	inputManager = new TargetSelector(18, 19, sharedData);
 	buttonManager = new HardwareButtonManager(GO_BUTTON, BOTTOM_OUT_BUTTON, SPEED_BUTTON, MOVE_TO_CONVERSION_BUTTON, sharedData);
 	environmentSensors = new EnvironmentSensors(sharedData);
-	calibrator = new Calibrator(sharedData);
 	display = new Display(sharedData);
 	stepperController = new StepperController(sharedData, HEIGHT_STEPPER_PULSE, HEIGHT_STEPPER_DIR);
 	lockController = new LockController(sharedData, LOCK_STEPPER_PULSE, LOCK_STEPPER_DIR);
+	calibrator = new Calibrator(sharedData, lockController);
 	calibrationOffsetHandler = new CalibrationOffsetHandler(sharedData);
 	menuHandler = new MenuHandler(sharedData, lockController);
 	sharedData->scheduleDisplayUpdate();
-	sharedData->switchState(MachineState::IDLE);
+	sharedData->switchState(MachineState::CALIBRATION_NEEDED);
 }
 
 void loop() {
