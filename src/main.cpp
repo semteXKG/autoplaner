@@ -12,6 +12,7 @@
 #include <LockController.h>
 #include <CalibrationOffsetHandler.h>
 #include <MenuHandler.h>
+#include <ArduinoNvs.h>
 
 #define DEBUG ""
 
@@ -40,6 +41,11 @@ MenuHandler* menuHandler;
 
 void setup() {
 	Serial.begin(115200);
+	
+	if (!NVS.begin("planer")) {
+		ESP.restart();
+	}
+	
 	sharedData = new SharedData();
 	inputManager = new TargetSelector(18, 19, sharedData);
 	buttonManager = new HardwareButtonManager(GO_BUTTON, BOTTOM_OUT_BUTTON, SPEED_BUTTON, MOVE_TO_CONVERSION_BUTTON, sharedData);

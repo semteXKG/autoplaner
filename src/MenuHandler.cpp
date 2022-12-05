@@ -56,14 +56,19 @@ void MenuHandler::handleEnterPressed() {
             sharedData->switchState(MachineState::SETTINGS_OFFSET_ADJUSTING);        
             break;
         case 1: 
-            sharedData->setLocked(!sharedData->isLocked());
+            if (sharedData->isLocked()) {
+                lockController->unlock(true);
+            } else {
+                lockController->lock(true);
+            }
+
             sharedData->switchState(MachineState::IDLE);        
             break;
         case 2: 
             if (sharedData->isLocked()) {
-                lockController->unlock();
+                lockController->unlock(false);
             } else {
-                lockController->lock();
+                lockController->lock(false);
             }
             sharedData->switchState(MachineState::IDLE);        
             break;

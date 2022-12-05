@@ -1,11 +1,20 @@
 #include <LockController.h>
+#include <ArduinoNvs.h>
+
+static const char* KEY_LOCKSTATE = "lockState";
 
 LockController::LockController(SharedData* sharedData, gpio_num_t pulsePin, gpio_num_t directionPin) {
     stepper = new AccelStepper(AccelStepper::DRIVER, pulsePin, directionPin);
     this->sharedData = sharedData;
+
+    Serial.print("Recovered LockState: ");
+    Serial.println(NVS.getInt(KEY_LOCKSTATE));
+    sharedData->setLocked(NVS.getInt(KEY_LOCKSTATE));
+
     stepper->setSpeed(LOCK_SPEED);
     stepper->setMaxSpeed(LOCK_SPEED);
     stepper->setAcceleration(LOCK_SPEED * 5);
+    
 }
 
 void LockController::tick() {
@@ -15,14 +24,14 @@ void LockController::tick() {
             sharedData->switchState(PREP_MOVING);
             return;
         }
-        unlock();
+        unlock(false);
         sharedData->switchState(UNLOCKING);
     } else if ( sharedData->getState() == PREP_LOCK) {
         if(sharedData->isLocked()) {
             sharedData->switchState(MachineState::IDLE);
             return;
         }
-        lock();
+        lock(false);
         sharedData->switchState(LOCKING);
     } else if (sharedData->getState() == LOCKING) {
         if (!stepper->isRunning()) {
@@ -39,12 +48,28 @@ void LockController::tick() {
     }
 }
 
-void LockController::lock() {
-    stepper->move(5 * PULSE_LOCK_PER_ROT);
+void LockController::lock(bool stateOnly) {
+    if (sharedData->isLocked()) {
+        return;
+    }
+
+    if (!stateOnly) {
+        stepper->move(PULSE_LOCK_PER_ROT);
+    }
     sharedData->setLocked(true);
+    NVS.setInt(KEY_LOCKSTATE, 1);
+    NVS.commit();
 }
 
-void LockController::unlock() {
-    stepper->move(-5 * PULSE_LOCK_PER_ROT);
+void LockController::unlock(bool stateOnly) {
+    if (!sharedData->isLocked()) {
+        return; 
+    }
+    
+    if (!stateOnly) {
+        stepper->move(PULSE_LOCK_PER_ROT);
+    }
     sharedData->setLocked(false);
+    NVS.setInt(KEY_LOCKSTATE, 0);
+    NVS.commit();
 }

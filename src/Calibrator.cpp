@@ -12,7 +12,7 @@ void Calibrator::tick() {
     if(this->sharedData->getState() == MachineState::CALIBRATION_NEEDED && this->sharedData->enterButton->rose() && !this->sharedData->bottomOut->isPressed()) {
         Serial.println("Starting Calibration");
         calibrationRunning = true;
-        lockController->unlock();
+        lockController->unlock(false);
         sharedData->switchState(PREP_CALIBRATION);
     }
 }

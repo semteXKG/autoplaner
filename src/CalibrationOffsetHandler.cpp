@@ -2,7 +2,6 @@
 
 CalibrationOffsetHandler::CalibrationOffsetHandler(SharedData* sharedData) {
     this->sharedData = sharedData;
-    NVS.begin("planer");
     float offset = NVS.getFloat(KEY_OFFSET);
     sharedData->setOffset(offset);
 }
