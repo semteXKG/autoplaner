@@ -1,5 +1,18 @@
 #include <TargetSelector.h>
 
+// the maximum acceleration is 10 times.
+constexpr float m = 20;
+
+// at 200ms or slower, there should be no acceleration. (factor 1)
+constexpr float longCutoff = 30;
+
+// at 5 ms, we want to have maximum acceleration (factor m)
+constexpr float shortCutoff = 2;
+
+constexpr float a = (m - 1) / (shortCutoff - longCutoff);
+constexpr float b = 1 - longCutoff * a;
+
+
 TargetSelector::TargetSelector(int pin1, int pin2, SharedData* sharedData) {
     this->encoder = new RotaryEncoder(pin1, pin2);
     this->sharedData = sharedData;
@@ -13,42 +26,41 @@ TargetSelector::~TargetSelector() {
 void TargetSelector::handleEncoder() {
     encoder->tick();
 	// Loop and read the count
+	int newPos = encoder->getPosition();
+
+ 	unsigned long ms = encoder->getMillisBetweenRotations();
+
+	if(encoder->getPosition() == prevEncPosition) {
+		return;
+	}
+	
+	if (ms < longCutoff) {
+		// do some acceleration using factors a and b
+
+		// limit to maximum acceleration
+		if (ms < shortCutoff) {
+			ms = shortCutoff;
+		}
+
+		float ticksActual_float = a * ms + b;
+		long deltaTicks = (long)ticksActual_float * (newPos - prevEncPosition);
+		newPos = newPos + deltaTicks;
+		encoder->setPosition(newPos);
+	}
 
 	int32_t delta = encoder->getPosition() - prevEncPosition;	
 	sharedData->setLastRotation(delta);
+	prevEncPosition = encoder->getPosition();	
 
 	if(this->sharedData->getState() != MachineState::IDLE && this->sharedData->getState() != MachineState::SETTINGS_OFFSET_ADJUSTING) {
-		this->prevEncPosition = encoder->getPosition();
 		return;
-	}
-
-	if(delta == 0) {
-		return;
-	}
-
-	if(encoder->getRPM() > 100) {
-		Serial.println("fast rotations rpm reached");
-		Serial.println(encoder->getRPM());
-		if(fastRotationSince == 0) {
-			fastRotationSince = millis();
-		} 
-		if(fastRotationSince < millis() - ROTATION_ACCELERATION_ENGAGE_DELAY) {
-			Serial.println("fast rotation enabled ");
-			fastRotationTill = millis() + ROTATION_ACCELERATION_TIMEOUT;
-		}	
-	} else {
-		fastRotationSince = 0;
 	}
 
 	double increment;
 	if (sharedData->speedButton->isPressed()) {
 		increment =  INCREMENT_FAST_IN_MM;
 	} else {
-		if(fastRotationTill > millis()) {
-			increment = INCREMENT_FROT_IN_MM;
-		} else {
-			increment = INCREMENT_NORMAL_IN_MM;
-		}
+		increment = INCREMENT_NORMAL_IN_MM;
 	}
 
 	lastValues[currentInputPosition % MAX_INPUTS] = delta * increment;
@@ -62,7 +74,6 @@ void TargetSelector::handleEncoder() {
 	}
 
 	sharedData->scheduleDisplayUpdate();
-	prevEncPosition = encoder->getPosition();
 }
 
 

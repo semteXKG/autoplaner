@@ -14,7 +14,7 @@ class SharedData {
         int lastRotation = 0;
         char* menuEntries[3];
         bool locked = false;
-        bool calibrationDone = false;
+        bool calibrationDone = true;
         MachineState state;
     public:
         SharedData();
