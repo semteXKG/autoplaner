@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <U8g2lib.h>
 #include <RotaryEncoder.h>
-#include <AccelStepper.h>
 #include <TargetSelector.h>
 #include <Display.h>
 #include <SharedData.h>
@@ -13,6 +12,7 @@
 #include <CalibrationOffsetHandler.h>
 #include <MenuHandler.h>
 #include <ArduinoNvs.h>
+#include <FastAccelStepper.h>
 
 #define DEBUG ""
 
@@ -38,6 +38,7 @@ StepperController* stepperController;
 LockController* lockController;
 CalibrationOffsetHandler* calibrationOffsetHandler;
 MenuHandler* menuHandler;
+FastAccelStepperEngine* engine;
 
 void setup() {
 	Serial.begin(115200);
@@ -45,14 +46,16 @@ void setup() {
 	if (!NVS.begin("planer")) {
 		ESP.restart();
 	}
-	
+
+	engine = new FastAccelStepperEngine();
+	engine->init();
 	sharedData = new SharedData();
 	inputManager = new TargetSelector(18, 19, sharedData);
 	buttonManager = new HardwareButtonManager(GO_BUTTON, BOTTOM_OUT_BUTTON, SPEED_BUTTON, MOVE_TO_CONVERSION_BUTTON, sharedData);
 	environmentSensors = new EnvironmentSensors(sharedData);
 	display = new Display(sharedData);
-	stepperController = new StepperController(sharedData, HEIGHT_STEPPER_PULSE, HEIGHT_STEPPER_DIR);
-	lockController = new LockController(sharedData, LOCK_STEPPER_PULSE, LOCK_STEPPER_DIR);
+	stepperController = new StepperController(sharedData, engine, HEIGHT_STEPPER_PULSE, HEIGHT_STEPPER_DIR);
+	lockController = new LockController(sharedData, engine, LOCK_STEPPER_PULSE, LOCK_STEPPER_DIR);
 	calibrator = new Calibrator(sharedData, lockController);
 	calibrationOffsetHandler = new CalibrationOffsetHandler(sharedData);
 	menuHandler = new MenuHandler(sharedData, lockController);

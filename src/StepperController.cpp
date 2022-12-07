@@ -1,17 +1,17 @@
 #include <StepperController.h>
 
-StepperController::StepperController(SharedData* sharedData, gpio_num_t pulsePin, gpio_num_t directionPin) {
-    stepper = new AccelStepper(AccelStepper::DRIVER, pulsePin, directionPin);
+StepperController::StepperController(SharedData* sharedData, FastAccelStepperEngine* engine, gpio_num_t pulsePin, gpio_num_t directionPin) {
     this->sharedData = sharedData;
-    stepper->setMaxSpeed(OP_SPEED);
+    stepper = engine->stepperConnectToPin(pulsePin);
+    stepper->setDirectionPin(directionPin);
+    stepper->setSpeedInHz(OP_SPEED);
     stepper->setAcceleration(10 * PULSE_PER_MM);
-    stepper->setMinPulseWidth(50);
     stepper->setCurrentPosition(0);  
 }
 
 void StepperController::handleBottomOut() {
     if (sharedData->bottomOut->rose()) {
-        stepper->stop();
+        stepper->stopMove();
     }
 }
 
@@ -20,28 +20,26 @@ void StepperController::handleCalibration() {
         if (!calibPhase1 && !calibPhase2) {
             Serial.println("ph1");
             calibPhase1 = true;
-            stepper->move(-5000000);
+            stepper->runBackward();
         }
 
-        if (calibPhase1 && sharedData->bottomOut->isPressed() && !this->stepper->isRunning()) {
+        if (calibPhase1 && sharedData->bottomOut->isPressed() && !this->stepper->isQueueEmpty()) {
             Serial.println("ph2");
             calibPhase2 = true;
-            stepper->setMaxSpeed(CAL_SPEED);
-            stepper->setSpeed(CAL_SPEED);
-            stepper->move(5000000);
+            stepper->setSpeedInHz(CAL_SPEED);
+            stepper->runForward();
         }
 
         if(calibPhase2 && !sharedData->bottomOut->isPressed()) {
             Serial.println("end");
-            stepper->stop();
+            stepper->forceStop();
             calibrationDone();
         }
     }
 }
 
 void StepperController::calibrationDone() {
-    stepper->setMaxSpeed(OP_SPEED);
-    stepper->setSpeed(OP_SPEED);
+    stepper->setSpeedInHz(OP_SPEED);
     calibPhase1 = false;
     calibPhase2 = false;
     sharedData->switchState(MachineState::IDLE);
@@ -51,7 +49,7 @@ void StepperController::calibrationDone() {
 
 void StepperController::handlePosition() {
     if(sharedData->getState() == MachineState::PREP_MOVING) {
-        double distance = sharedData->getCurrentPosition() - sharedData->getTargetPosition();
+        double distance = sharedData->getCurrentPosition() - sharedData->getTargetPosition(); // needs decoupeling of the position
         totalDistanceInPulses = distance * PULSE_PER_MM;
         if(distance < 0) {
            sharedData->switchState(MachineState::MOVING_DOWN_OVERSHOOT);
@@ -62,6 +60,7 @@ void StepperController::handlePosition() {
         Serial.print("Pulses: ");
         Serial.println(totalDistanceInPulses);
         stepper->move(totalDistanceInPulses);
+        sharedData->setCurrentPosition(sharedData->getTargetPosition());
     } else if(sharedData->getState() == MachineState::MOVING_DOWN_OVERSHOOT && !stepper->isRunning()) {
         Serial.println("correcting overshoot");
         sharedData->switchState(MachineState::MOVING_DOWN_CORRECTION);
@@ -72,24 +71,10 @@ void StepperController::handlePosition() {
     }
 }
 
-
-void StepperController::updateCurrentPosition() {
-    if(sharedData->getState() == MachineState::MOVING_UP || sharedData->getState() == MachineState::MOVING_DOWN_CORRECTION || sharedData->getState() == MOVING_DOWN_OVERSHOOT) {
-       double distanceLeft = stepper->distanceToGo() / (PULSE_PER_MM * 1.0);
-       sharedData->setCurrentPosition(sharedData->getTargetPosition() + distanceLeft);
-    }
-}
-
 void StepperController::tick() {
     handleBottomOut();
     handleCalibration();
     handlePosition();
-    if (calibPhase2) {
-        stepper->runSpeed();
-    } else {
-        stepper->run();
-    }
-    updateCurrentPosition();
 }
 
 StepperController::~StepperController() {

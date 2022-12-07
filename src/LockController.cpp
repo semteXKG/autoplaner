@@ -3,22 +3,19 @@
 
 static const char* KEY_LOCKSTATE = "lockState";
 
-LockController::LockController(SharedData* sharedData, gpio_num_t pulsePin, gpio_num_t directionPin) {
-    stepper = new AccelStepper(AccelStepper::DRIVER, pulsePin, directionPin);
+LockController::LockController(SharedData* sharedData, FastAccelStepperEngine* engine, gpio_num_t pulsePin, gpio_num_t directionPin) {
+    stepper = engine->stepperConnectToPin(pulsePin);
     this->sharedData = sharedData;
 
     Serial.print("Recovered LockState: ");
     Serial.println(NVS.getInt(KEY_LOCKSTATE));
     sharedData->setLocked(NVS.getInt(KEY_LOCKSTATE));
 
-    stepper->setSpeed(LOCK_SPEED);
-    stepper->setMaxSpeed(LOCK_SPEED);
+    stepper->setSpeedInHz(LOCK_SPEED);
     stepper->setAcceleration(LOCK_SPEED * 5);
-    
 }
 
 void LockController::tick() {
-    stepper->run();
     if(sharedData->getState() == PREP_UNLOCK) {
         if(!sharedData->isLocked()) {
             sharedData->switchState(PREP_MOVING);
