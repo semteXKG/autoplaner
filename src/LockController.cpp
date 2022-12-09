@@ -12,7 +12,8 @@ LockController::LockController(SharedData* sharedData, FastAccelStepperEngine* e
     sharedData->setLocked(NVS.getInt(KEY_LOCKSTATE));
 
     stepper->setSpeedInHz(LOCK_SPEED);
-    stepper->setAcceleration(LOCK_SPEED * 5);
+    stepper->setAcceleration(LOCK_SPEED*4);
+    stepper->setDirectionPin(directionPin);
 }
 
 void LockController::tick() {
@@ -51,7 +52,8 @@ void LockController::lock(bool stateOnly) {
     }
 
     if (!stateOnly) {
-        stepper->move(PULSE_LOCK_PER_ROT);
+        stepper->move(6*PULSE_LOCK_PER_ROT);
+        Serial.println("moving motor");
     }
     sharedData->setLocked(true);
     NVS.setInt(KEY_LOCKSTATE, 1);
@@ -64,7 +66,7 @@ void LockController::unlock(bool stateOnly) {
     }
     
     if (!stateOnly) {
-        stepper->move(PULSE_LOCK_PER_ROT);
+        stepper->move(-6*PULSE_LOCK_PER_ROT);
     }
     sharedData->setLocked(false);
     NVS.setInt(KEY_LOCKSTATE, 0);

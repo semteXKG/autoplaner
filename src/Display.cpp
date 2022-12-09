@@ -5,7 +5,7 @@
 Display::Display(SharedData* sharedData) {
     this->sharedData = sharedData;
 	this->u8g2 = new U8G2_SH1106_128X64_NONAME_F_HW_I2C(U8G2_R0);
-	u8g2->setBusClock(1000000);
+	u8g2->setBusClock(500000);
 	u8g2->begin();
 	Serial.print("clock: ");
 	Serial.println(Wire.getClock());

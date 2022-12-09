@@ -16,7 +16,7 @@ static const double CAL_POSITION_MM = 209.3;
 static const int DEAD_ZONE = PULSE_PER_MM * 0.05;
 static const int OVERSHOOT = PULSE_PER_MM;
 
-static const int LOCK_SPEED = 2 * PULSE_LOCK_PER_ROT;
+static const int LOCK_SPEED = 8 * PULSE_LOCK_PER_ROT;
 
 static const int ROTATION_ACCELERATION_TIMEOUT = 1000;
 static const int ROTATION_ACCELERATION_ENGAGE_DELAY = 10;

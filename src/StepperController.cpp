@@ -23,8 +23,7 @@ void StepperController::handleCalibration() {
             stepper->runBackward();
         }
 
-        if (calibPhase1 && sharedData->bottomOut->isPressed() && !this->stepper->isQueueEmpty()) {
-            Serial.println("ph2");
+        if (calibPhase1 && sharedData->bottomOut->isPressed() && this->stepper->isRunning()) {
             calibPhase2 = true;
             stepper->setSpeedInHz(CAL_SPEED);
             stepper->runForward();
@@ -42,6 +41,7 @@ void StepperController::calibrationDone() {
     stepper->setSpeedInHz(OP_SPEED);
     calibPhase1 = false;
     calibPhase2 = false;
+    sharedData->markCalibrationDone();
     sharedData->switchState(MachineState::IDLE);
     sharedData->setPosition(CAL_POSITION_MM + sharedData->getOffset());
     sharedData->scheduleDisplayUpdate();

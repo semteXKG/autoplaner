@@ -24,6 +24,7 @@ TargetSelector::~TargetSelector() {
 }
 
 void TargetSelector::handleEncoder() {
+	sharedData->setLastRotation(0);
     encoder->tick();
 	// Loop and read the count
 	int newPos = encoder->getPosition();

@@ -60,7 +60,7 @@ void setup() {
 	calibrationOffsetHandler = new CalibrationOffsetHandler(sharedData);
 	menuHandler = new MenuHandler(sharedData, lockController);
 	sharedData->scheduleDisplayUpdate();
-	sharedData->switchState(MachineState::IDLE);
+	sharedData->switchState(MachineState::CALIBRATION_NEEDED);
 }
 
 void loop() {
