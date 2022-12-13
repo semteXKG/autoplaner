@@ -119,7 +119,7 @@ void TargetSelector::correctAccidentalInputs() {
 void TargetSelector::handleMoveToConversionButton() {
 	if (sharedData->getState() == IDLE && sharedData->moveToConversion->isPressed() && sharedData->moveToConversion->currentDuration() > TIMEOUT_MOVE_TO_CONVERSION) {
 		sharedData->setTargetPosition(170.0);
-		sharedData->switchState(PREP_MOVING);
+		sharedData->switchState(PREP_UNLOCK);
 	}
 }
 

@@ -52,7 +52,7 @@ void LockController::lock(bool stateOnly) {
     }
 
     if (!stateOnly) {
-        stepper->move(6*PULSE_LOCK_PER_ROT);
+        stepper->move(9*PULSE_LOCK_PER_ROT);
         Serial.println("moving motor");
     }
     sharedData->setLocked(true);
@@ -66,7 +66,7 @@ void LockController::unlock(bool stateOnly) {
     }
     
     if (!stateOnly) {
-        stepper->move(-6*PULSE_LOCK_PER_ROT);
+        stepper->move(-9*PULSE_LOCK_PER_ROT);
     }
     sharedData->setLocked(false);
     NVS.setInt(KEY_LOCKSTATE, 0);
