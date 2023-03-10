@@ -14,7 +14,7 @@ constexpr float b = 1 - longCutoff * a;
 
 
 TargetSelector::TargetSelector(int pin1, int pin2, SharedData* sharedData) {
-    this->encoder = new RotaryEncoder(pin1, pin2);
+    this->encoder = new RotaryEncoder(pin1, pin2, RotaryEncoder::LatchMode::TWO03);
     this->sharedData = sharedData;
 	this->prevEncPosition = 0;
 }
