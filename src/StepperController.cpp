@@ -43,17 +43,17 @@ void StepperController::calibrationDone() {
     calibPhase2 = false;
     sharedData->markCalibrationDone();
     sharedData->switchState(MachineState::IDLE);
-    sharedData->setPosition(CAL_POSITION_MM + sharedData->getOffset());
+    sharedData->setPosition(CAL_POSITION_DENOM + sharedData->getOffset());
     sharedData->scheduleDisplayUpdate();
 }
 
 void StepperController::handlePosition() {
     if(sharedData->getState() == MachineState::PREP_MOVING) {
-        double distance = sharedData->getCurrentPosition() - sharedData->getTargetPosition(); // needs decoupeling of the position
-        totalDistanceInPulses = distance * PULSE_PER_MM;
-        if(distance < 0) {
+        long distanceInDenom = sharedData->getCurrentPosition() - sharedData->getTargetPosition(); // needs decoupeling of the position
+        totalDistanceInPulses = distanceInDenom / DENOM_PER_PULSE;
+        if(distanceInDenom < 0) {
            sharedData->switchState(MachineState::MOVING_DOWN_OVERSHOOT);
-           totalDistanceInPulses = totalDistanceInPulses - DEAD_ZONE - OVERSHOOT; 
+           totalDistanceInPulses = totalDistanceInPulses - DEAD_ZONE_PULSE - OVERSHOOT_PULSE; 
         } else {
             sharedData->switchState(MachineState::MOVING_UP);
         }
@@ -64,7 +64,7 @@ void StepperController::handlePosition() {
     } else if(sharedData->getState() == MachineState::MOVING_DOWN_OVERSHOOT && !stepper->isRunning()) {
         Serial.println("correcting overshoot");
         sharedData->switchState(MachineState::MOVING_DOWN_CORRECTION);
-        stepper->move(DEAD_ZONE + OVERSHOOT);
+        stepper->move(DEAD_ZONE_PULSE + OVERSHOOT_PULSE);
     } else if((sharedData->getState() == MachineState::MOVING_DOWN_CORRECTION || sharedData->getState() == MachineState::MOVING_UP) && !stepper->isRunning()) {
         Serial.println("going lock");
         sharedData->switchState(PREP_LOCK);

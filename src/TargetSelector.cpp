@@ -35,11 +35,11 @@ void TargetSelector::handleEncoder() {
 
 	double increment;
 	if (sharedData->speedButton->isPressed()) {
-		increment =  INCREMENT_SLOW_IN_MM;
+		increment =  INCREMENT_SLOW_IN_DENOM;
 	} else if (fastMode) {
-		increment = INCREMENT_NORMAL_IN_MM * 4;
+		increment = INCREMENT_NORMAL_IN_DENOM * 4;
 	} else {
-		increment = INCREMENT_NORMAL_IN_MM;
+		increment = INCREMENT_NORMAL_IN_DENOM;
 	}
 
 	lastValues[currentInputPosition % MAX_INPUTS] = delta * increment;

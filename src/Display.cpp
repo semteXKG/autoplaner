@@ -44,10 +44,10 @@ void Display::updatePositionReadings(bool blink) {
 	char output[20];	
 	int size;
 	if((sharedData->getCurrentPosition() == sharedData->getTargetPosition())) {
-		sprintf(&output[0], "%03.1f", sharedData->getCurrentPosition());
+		sprintf(&output[0], "%03.1f", sharedData->getCurrentPosition() / DENOMINATION);
 		size = 24;
 	} else {
-		sprintf(&output[0], "%03.1f (%03.1f)", sharedData->getTargetPosition(), sharedData->getTargetPosition() - sharedData->getCurrentPosition());
+		sprintf(&output[0], "%03.1f (%03.1f)", sharedData->getTargetPosition() / DENOMINATION, (sharedData->getTargetPosition() - sharedData->getCurrentPosition()) / DENOMINATION);
 		size = 10;
 	}	
 	printCenterText(output, size);
@@ -57,7 +57,7 @@ void Display::updateOffsetReadings() {
 	u8g2->setFont(u8g2_font_profont11_tr);
 	u8g2->drawStr(4, u8g2->getMaxCharHeight() + 1, "Offset Adjust");
 	char output[20];	
-	sprintf(&output[0], "%03.1f", sharedData->getOffset());
+	sprintf(&output[0], "%03.1f", sharedData->getOffset() / DENOMINATION);
 	printCenterText(output, 24);
 }
 
@@ -102,7 +102,7 @@ void Display::printBorder() {
 void Display::printPrevious() {
 	u8g2->setFont(u8g2_font_profont11_tr);
 	char output[20];	
-	sprintf(&output[0], "Prev: %03.1f", sharedData->getLastDistance());
+	sprintf(&output[0], "Prev: %03.1f", sharedData->getLastDistance() / DENOMINATION);
 	int width = u8g2->getUTF8Width(output);
 	u8g2->drawStr(u8g2->getDisplayWidth() - width - 4, u8g2->getMaxCharHeight() + 1, output);
 }

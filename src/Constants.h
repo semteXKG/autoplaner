@@ -1,21 +1,24 @@
+static const long DENOMINATION = 1000000L;
+
 static const long INPUT_QUALIFIES_AS_FASTMODE = 10;
 
-static const double INCREMENT_NORMAL_IN_MM = 1;
-static const double INCREMENT_SLOW_IN_MM = 0.1;
+static const long INCREMENT_NORMAL_IN_DENOM = 1 * DENOMINATION;
+static const long INCREMENT_SLOW_IN_DENOM = DENOMINATION / 10;
 
-static const double MAX_POSITION = 210;
-static const double MIN_POSITION = 8;
+static const long MAX_POSITION = 210 * DENOMINATION;
+static const long MIN_POSITION = 8 * DENOMINATION;
 
 static const int PULSE_PER_MM = 800;
+static const int DENOM_PER_PULSE = 1250;
 static const int PULSE_LOCK_PER_ROT = 1600;
 
 static const int OP_SPEED = 8 * PULSE_PER_MM;
 static const int CAL_SPEED = 0.5 * PULSE_PER_MM;
 
-static const double CAL_POSITION_MM = 209.3;
+static const long CAL_POSITION_DENOM = 209300000;
 
-static const int DEAD_ZONE = PULSE_PER_MM * 0.05;
-static const int OVERSHOOT = PULSE_PER_MM;
+static const int DEAD_ZONE_PULSE = PULSE_PER_MM * 0.05;
+static const int OVERSHOOT_PULSE = PULSE_PER_MM;
 
 static const int LOCK_SPEED = 6 * PULSE_LOCK_PER_ROT;
 
