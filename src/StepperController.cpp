@@ -43,6 +43,8 @@ void StepperController::calibrationDone() {
     calibPhase2 = false;
     sharedData->markCalibrationDone();
     sharedData->switchState(MachineState::IDLE);
+    Serial.print("Offset in NVR: ");
+    Serial.println(sharedData->getOffset());
     sharedData->setPosition(CAL_POSITION_DENOM + sharedData->getOffset());
     sharedData->scheduleDisplayUpdate();
 }

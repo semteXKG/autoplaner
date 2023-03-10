@@ -13,7 +13,7 @@ class TargetSelector {
         long fastRotationTill = 0, fastRotationSince = 0;
         long currentInputPosition = 0;
         bool hasCorrectInputSource;
-        double lastValues[MAX_INPUTS];
+        long lastValues[MAX_INPUTS];
         long lastTimestamps[MAX_INPUTS];
         void handleEncoder();
         void handleInputSelectionButton();

@@ -33,7 +33,7 @@ void TargetSelector::handleEncoder() {
 		return;
 	}
 
-	double increment;
+	long increment;
 	if (sharedData->speedButton->isPressed()) {
 		increment =  INCREMENT_SLOW_IN_DENOM;
 	} else if (fastMode) {
@@ -45,7 +45,7 @@ void TargetSelector::handleEncoder() {
 	lastValues[currentInputPosition % MAX_INPUTS] = delta * increment;
 	lastTimestamps[currentInputPosition % MAX_INPUTS] = millis();
 	currentInputPosition++;
-	
+
 	if(sharedData->getState() == MachineState::IDLE) {
 		sharedData->setTargetPosition(sharedData->getTargetPosition() + (delta * increment));
 	} else if (sharedData->getState() == MachineState::SETTINGS_OFFSET_ADJUSTING) {
@@ -96,7 +96,7 @@ void TargetSelector::correctAccidentalInputs() {
 
 void TargetSelector::handleMoveToConversionButton() {
 	if (sharedData->getState() == IDLE && sharedData->moveToConversion->isPressed() && sharedData->moveToConversion->currentDuration() > TIMEOUT_MOVE_TO_CONVERSION) {
-		sharedData->setTargetPosition(170.0);
+		sharedData->setTargetPosition(IDLE_POSITION_IN_DENOM);
 		sharedData->switchState(PREP_UNLOCK);
 	}
 }

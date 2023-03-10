@@ -11,11 +11,11 @@ SharedData::~SharedData() {
 
 }
 
-double SharedData::getTargetPosition() {
+long SharedData::getTargetPosition() {
     return this->targetPosition;
 }
 
-void SharedData::setTargetPosition(double targetPosition) {
+void SharedData::setTargetPosition(long targetPosition) {
     this->targetPosition = targetPosition;
     if(this->targetPosition < MIN_POSITION) {
 		this->targetPosition = MIN_POSITION;
@@ -24,32 +24,32 @@ void SharedData::setTargetPosition(double targetPosition) {
 	}
 }
 
-double SharedData::getCurrentPosition() {
+long SharedData::getCurrentPosition() {
     return this->currentPosition;
 }
 
-void SharedData::setCurrentPosition(double currentPosition) {
+void SharedData::setCurrentPosition(long currentPosition) {
     this->currentPosition = currentPosition;
 }
 
-void SharedData::setPosition(double position) {
+void SharedData::setPosition(long position) {
     setCurrentPosition(position);
     setTargetPosition(position);
 }
 
-void SharedData::setOffset(float offset) {
+void SharedData::setOffset(int offset) {
     this->offset = offset;
 }
 
-double SharedData::getOffset() {
+int SharedData::getOffset() {
     return offset;
 }
 
-double SharedData::getLastDistance() {
+long SharedData::getLastDistance() {
     return lastDistance;
 }
 
-void SharedData::setLastDistance(double lastDistance) {
+void SharedData::setLastDistance(long lastDistance) {
     this->lastDistance = lastDistance;
 }
 
@@ -124,7 +124,5 @@ bool SharedData::evaluateFastmodeEnablement(long msSinceLast) {
     } else {
         rapidInputReceived = 0;
     }
-
-    Serial.println(rapidInputReceived);
     return rapidInputReceived > 2;
 }

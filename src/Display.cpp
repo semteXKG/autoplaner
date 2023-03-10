@@ -44,10 +44,10 @@ void Display::updatePositionReadings(bool blink) {
 	char output[20];	
 	int size;
 	if((sharedData->getCurrentPosition() == sharedData->getTargetPosition())) {
-		sprintf(&output[0], "%03.1f", sharedData->getCurrentPosition() / DENOMINATION);
+		sprintf(&output[0], "%03.1f", sharedData->getCurrentPosition() / (double)DENOMINATION);
 		size = 24;
 	} else {
-		sprintf(&output[0], "%03.1f (%03.1f)", sharedData->getTargetPosition() / DENOMINATION, (sharedData->getTargetPosition() - sharedData->getCurrentPosition()) / DENOMINATION);
+		sprintf(&output[0], "%03.1f (%03.1f)", sharedData->getTargetPosition() / (double)DENOMINATION, (sharedData->getTargetPosition() - sharedData->getCurrentPosition()) / (double)DENOMINATION);
 		size = 10;
 	}	
 	printCenterText(output, size);
@@ -57,7 +57,7 @@ void Display::updateOffsetReadings() {
 	u8g2->setFont(u8g2_font_profont11_tr);
 	u8g2->drawStr(4, u8g2->getMaxCharHeight() + 1, "Offset Adjust");
 	char output[20];	
-	sprintf(&output[0], "%03.1f", sharedData->getOffset() / DENOMINATION);
+	sprintf(&output[0], "%03.1f", sharedData->getOffset() / (double)DENOMINATION);
 	printCenterText(output, 24);
 }
 

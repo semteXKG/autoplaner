@@ -26,6 +26,8 @@ static const int ROTATION_ACCELERATION_TIMEOUT = 1000;
 static const int ROTATION_ACCELERATION_ENGAGE_DELAY = 10;
 static const int LONG_PRESS_TIMEOUT_IN_MILLISECONDS = 1000;
 
+static const long IDLE_POSITION_IN_DENOM = 170 * DENOMINATION;
+
 static const int DISPLAY_UPDATE_DELAY = 50;
 
 static const int MAX_INPUTS = 5;

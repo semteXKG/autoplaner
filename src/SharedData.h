@@ -6,11 +6,11 @@
 
 class SharedData {
     private:
-        double targetPosition;
-        double currentPosition;
-        double offset;
+        long targetPosition;
+        long currentPosition;
+        int offset;
         long nextDisplayUpdate = -1;
-        double lastDistance = 0;
+        long lastDistance = 0;
         int lastRotation = 0;
         char* menuEntries[3];
         bool locked = false;
@@ -24,15 +24,15 @@ class SharedData {
         Bounce2::Button* speedButton;
         Bounce2::Button* bottomOut;
         Bounce2::Button* moveToConversion;
-        void setTargetPosition(double targetPosition);
-        double getTargetPosition();
-        void setCurrentPosition(double currentPosition);
-        double getCurrentPosition();
-        void setPosition(double position);
-        void setOffset(float offset);
-        double getOffset();
-        double getLastDistance();
-        void setLastDistance(double lastDistance);
+        void setTargetPosition(long targetPosition);
+        long getTargetPosition();
+        void setCurrentPosition(long currentPosition);
+        long getCurrentPosition();
+        void setPosition(long position);
+        void setOffset(int offset);
+        int getOffset();
+        long getLastDistance();
+        void setLastDistance(long lastDistance);
         void setMenuEntries(char* upper, char* mid, char* low);
         char** getMenuEntries();
         void setLastRotation(int rotation);
