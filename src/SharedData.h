@@ -15,6 +15,7 @@ class SharedData {
         char* menuEntries[3];
         bool locked = false;
         bool calibrationDone = false;
+        int rapidInputReceived = 0;
         MachineState state;
     public:
         SharedData();
@@ -42,6 +43,7 @@ class SharedData {
         void scheduleDisplayUpdate();
         bool shouldUpdateDisplay();
         void switchState(MachineState state);
+        bool evaluateFastmodeEnablement(long msSinceLast);
         MachineState getState();
 };
 

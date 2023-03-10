@@ -29,12 +29,15 @@ void TargetSelector::handleEncoder() {
 	// Loop and read the count
 	int newPos = encoder->getPosition();
 
+
  	unsigned long ms = encoder->getMillisBetweenRotations();
 
 	if(encoder->getPosition() == prevEncPosition) {
 		return;
 	}
-	
+
+	bool fastMode = sharedData->evaluateFastmodeEnablement(ms);
+
 	int32_t delta = encoder->getPosition() - prevEncPosition;	
 	sharedData->setLastRotation(delta);
 	prevEncPosition = encoder->getPosition();	
@@ -46,6 +49,8 @@ void TargetSelector::handleEncoder() {
 	double increment;
 	if (sharedData->speedButton->isPressed()) {
 		increment =  INCREMENT_SLOW_IN_MM;
+	} else if (fastMode) {
+		increment = INCREMENT_NORMAL_IN_MM * 2;
 	} else {
 		increment = INCREMENT_NORMAL_IN_MM;
 	}

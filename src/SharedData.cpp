@@ -117,3 +117,12 @@ void SharedData::switchState(MachineState state) {
     this->state = state;
     scheduleDisplayUpdate();
 }
+
+bool SharedData::evaluateFastmodeEnablement(long msSinceLast) {
+    if (msSinceLast < INPUT_QUALIFIES_AS_FASTMODE) {
+        rapidInputReceived++;
+    } else {
+        rapidInputReceived = 0;
+    }
+    return rapidInputReceived > 3;
+}
