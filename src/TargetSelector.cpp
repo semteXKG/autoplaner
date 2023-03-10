@@ -35,20 +35,6 @@ void TargetSelector::handleEncoder() {
 		return;
 	}
 	
-	if (ms < longCutoff) {
-		// do some acceleration using factors a and b
-
-		// limit to maximum acceleration
-		if (ms < shortCutoff) {
-			ms = shortCutoff;
-		}
-
-		float ticksActual_float = a * ms + b;
-		long deltaTicks = (long)ticksActual_float * (newPos - prevEncPosition);
-		newPos = newPos + deltaTicks;
-		encoder->setPosition(newPos);
-	}
-
 	int32_t delta = encoder->getPosition() - prevEncPosition;	
 	sharedData->setLastRotation(delta);
 	prevEncPosition = encoder->getPosition();	
@@ -59,7 +45,7 @@ void TargetSelector::handleEncoder() {
 
 	double increment;
 	if (sharedData->speedButton->isPressed()) {
-		increment =  INCREMENT_FAST_IN_MM;
+		increment =  INCREMENT_SLOW_IN_MM;
 	} else {
 		increment = INCREMENT_NORMAL_IN_MM;
 	}
