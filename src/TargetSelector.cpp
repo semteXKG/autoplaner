@@ -1,18 +1,5 @@
 #include <TargetSelector.h>
 
-// the maximum acceleration is 10 times.
-constexpr float m = 20;
-
-// at 200ms or slower, there should be no acceleration. (factor 1)
-constexpr float longCutoff = 30;
-
-// at 5 ms, we want to have maximum acceleration (factor m)
-constexpr float shortCutoff = 2;
-
-constexpr float a = (m - 1) / (shortCutoff - longCutoff);
-constexpr float b = 1 - longCutoff * a;
-
-
 TargetSelector::TargetSelector(int pin1, int pin2, SharedData* sharedData) {
     this->encoder = new RotaryEncoder(pin1, pin2, RotaryEncoder::LatchMode::TWO03);
     this->sharedData = sharedData;
@@ -50,7 +37,7 @@ void TargetSelector::handleEncoder() {
 	if (sharedData->speedButton->isPressed()) {
 		increment =  INCREMENT_SLOW_IN_MM;
 	} else if (fastMode) {
-		increment = INCREMENT_NORMAL_IN_MM * 2;
+		increment = INCREMENT_NORMAL_IN_MM * 4;
 	} else {
 		increment = INCREMENT_NORMAL_IN_MM;
 	}

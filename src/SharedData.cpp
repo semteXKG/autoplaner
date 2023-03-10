@@ -124,5 +124,7 @@ bool SharedData::evaluateFastmodeEnablement(long msSinceLast) {
     } else {
         rapidInputReceived = 0;
     }
-    return rapidInputReceived > 3;
+
+    Serial.println(rapidInputReceived);
+    return rapidInputReceived > 2;
 }

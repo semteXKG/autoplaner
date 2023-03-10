@@ -1,4 +1,4 @@
-static const long INPUT_QUALIFIES_AS_FASTMODE = 4;
+static const long INPUT_QUALIFIES_AS_FASTMODE = 10;
 
 static const double INCREMENT_NORMAL_IN_MM = 1;
 static const double INCREMENT_SLOW_IN_MM = 0.1;
