@@ -17,7 +17,16 @@
 			"new": "cpp",
 			"*.tcc": "cpp",
 			"fstream": "cpp",
-			"ostream": "cpp"
+			"ostream": "cpp",
+			"functional": "cpp",
+			"iterator": "cpp",
+			"memory_resource": "cpp",
+			"optional": "cpp",
+			"istream": "cpp",
+			"sstream": "cpp",
+			"streambuf": "cpp",
+			"tuple": "cpp",
+			"utility": "cpp"
 		}
 	}
 }

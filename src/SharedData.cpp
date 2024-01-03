@@ -2,9 +2,9 @@
 #include <Arduino.h>
 
 SharedData::SharedData() {
-    this->currentPosition = MIN_POSITION;
-    this->targetPosition = this->currentPosition;
-    this->state = MachineState::CALIBRATION_NEEDED;
+    backingData.currentPosition = MIN_POSITION;
+    backingData.targetPosition = backingData.currentPosition;
+    backingData.state = MachineState::CALIBRATION_NEEDED;
 }
 
 SharedData::~SharedData() {
@@ -12,24 +12,24 @@ SharedData::~SharedData() {
 }
 
 long SharedData::getTargetPosition() {
-    return this->targetPosition;
+    return backingData.targetPosition;
 }
 
 void SharedData::setTargetPosition(long targetPosition) {
-    this->targetPosition = targetPosition;
-    if(this->targetPosition < MIN_POSITION) {
-		this->targetPosition = MIN_POSITION;
-	} else if (this->targetPosition > MAX_POSITION) {
-		this->targetPosition = MAX_POSITION;
+    backingData.targetPosition = targetPosition;
+    if(backingData.targetPosition < MIN_POSITION) {
+		backingData.targetPosition = MIN_POSITION;
+	} else if (backingData.targetPosition > MAX_POSITION) {
+		backingData.targetPosition = MAX_POSITION;
 	}
 }
 
 long SharedData::getCurrentPosition() {
-    return this->currentPosition;
+    return backingData.currentPosition;
 }
 
 void SharedData::setCurrentPosition(long currentPosition) {
-    this->currentPosition = currentPosition;
+    backingData.currentPosition = currentPosition;
 }
 
 void SharedData::setPosition(long position) {
@@ -38,19 +38,19 @@ void SharedData::setPosition(long position) {
 }
 
 void SharedData::setOffset(int offset) {
-    this->offset = offset;
+    backingData.offset = offset;
 }
 
 int SharedData::getOffset() {
-    return offset;
+    return backingData.offset;
 }
 
 long SharedData::getLastDistance() {
-    return lastDistance;
+    return backingData.lastDistance;
 }
 
 void SharedData::setLastDistance(long lastDistance) {
-    this->lastDistance = lastDistance;
+    backingData.lastDistance = lastDistance;
 }
 
 void SharedData::setMenuEntries(char* upper, char* mid, char* low) {
@@ -64,48 +64,48 @@ char** SharedData::getMenuEntries() {
 }
 
 void SharedData::setLastRotation(int lastRotation) {
-    this->lastRotation = lastRotation;
+    backingData.lastRotation = lastRotation;
 }
 
 int SharedData::getLastRotation() {
-    return lastRotation;
+    return backingData.lastRotation;
 }
 
 bool SharedData::isLocked() {
-    return locked;
+    return backingData.locked;
 }
 
 void SharedData::setLocked(bool locked) {
     Serial.print("locked: ");
     Serial.println(locked);
-    this->locked = locked;
+    backingData.locked = locked;
     scheduleDisplayUpdate();
 }
 
 void SharedData::markCalibrationDone() {
-    this->calibrationDone = true;
+    backingData.calibrationDone = true;
 }
 
 void SharedData::scheduleDisplayUpdate() {
-    if(this->nextDisplayUpdate == -1) {
-        this->nextDisplayUpdate = millis() + DISPLAY_UPDATE_DELAY;
+    if(backingData.nextDisplayUpdate == -1) {
+        backingData.nextDisplayUpdate = millis() + DISPLAY_UPDATE_DELAY;
     }
 }
 
 bool SharedData::shouldUpdateDisplay() {
-    if (this->nextDisplayUpdate != -1 && millis() > this->nextDisplayUpdate) {
-        this->nextDisplayUpdate = -1;
+    if (backingData.nextDisplayUpdate != -1 && millis() > backingData.nextDisplayUpdate) {
+        backingData.nextDisplayUpdate = -1;
         return true;
     }
     return false;
 }
 
 MachineState SharedData::getState() {
-    return this->state;
+    return backingData.state;
 }
 
 void SharedData::switchState(MachineState state) {
-    if(state == IDLE && !calibrationDone) {
+    if(state == IDLE && !backingData.calibrationDone) {
         Serial.print("Cannot go idle without calibration ");
         state = MachineState::CALIBRATION_NEEDED;
     }
@@ -114,7 +114,7 @@ void SharedData::switchState(MachineState state) {
     Serial.print(" - ");
     Serial.println(machineStateDesc[state]);
     
-    this->state = state;
+    backingData.state = state;
     scheduleDisplayUpdate();
 }
 

@@ -4,19 +4,25 @@
 #include <Constants.h>
 #include <Bounce2.h>
 
+struct BackingData
+{
+    long targetPosition;
+    long currentPosition;
+    int offset;
+    long nextDisplayUpdate = -1;
+    long lastDistance = 0;
+    int lastRotation = 0;
+    bool locked = false;
+    bool calibrationDone = false;
+    MachineState state;
+};
+
+
 class SharedData {
     private:
-        long targetPosition;
-        long currentPosition;
-        int offset;
-        long nextDisplayUpdate = -1;
-        long lastDistance = 0;
-        int lastRotation = 0;
+        BackingData backingData;
         char* menuEntries[3];
-        bool locked = false;
-        bool calibrationDone = false;
         int rapidInputReceived = 0;
-        MachineState state;
     public:
         SharedData();
         ~SharedData();
